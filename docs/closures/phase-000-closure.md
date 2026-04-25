@@ -1,53 +1,92 @@
 # Phase 000 Closure: Workstation Bootstrap
 
+## Phase and title
+
+Phase 0: Workstation Bootstrap
+
 ## Closure status
 
-Phase 0 is open and not closed.
+Phase 0 is complete.
 
-## Scope completed in this patch
+## Scope completed
 
-- Repaired a truth gap where the applied repo docs and progress log referenced `scripts/bootstrap-workstation-kubuntu.sh`, but the uploaded patch artifact did not include the file.
-- Added the missing guarded Kubuntu/Ubuntu workstation bootstrap helper.
-- Kept dry-run as the default behavior and required `--install` before host mutation.
-- Refreshed Phase 0 spec, golden evidence, and progress state to match the actual repo state.
+The primary workstation now satisfies the Phase 0 toolchain requirements:
+
+- Git is available.
+- Node LTS is available.
+- pnpm is available.
+- PostgreSQL client tools are available.
+- PostgreSQL native service is active under systemd.
+- Caddy is available.
+- systemd and `systemctl` are available.
+- make is available.
+- curl is available.
+- jq is available.
+- openssl is available.
+
+This closure patch also hardens `scripts/bootstrap-workstation-kubuntu.sh` after the observed Caddy apt key failure. The helper now places the Caddy keyring at `/usr/share/keyrings/caddy-stable-archive-keyring.gpg`, removes the earlier `/etc/apt/keyrings` copy, and refreshes the Caddy source list before install.
 
 ## Checklist status
 
-- Workstation can run Node, pnpm, Git, PostgreSQL client tools, Caddy, and systemd commands: not yet proven by a passing target-workstation transcript.
-- PostgreSQL native service can be checked with systemd: not yet proven by a passing target-workstation transcript.
-- `docs/dev/workstation.md` exists and matches the Phase 0 scope: yes.
+- Workstation can run Node, pnpm, Git, PostgreSQL client tools, Caddy, and systemd commands: yes.
+- PostgreSQL native service is active: yes.
+- `docs/dev/workstation.md` exists and matches Phase 0 scope: yes.
 - `scripts/verify-workstation.sh` exists and fails closed: yes.
 - `scripts/bootstrap-workstation-kubuntu.sh` exists, defaults to dry-run, and has shell syntax checked: yes.
-- Global completion laws satisfied for this patch slice: yes.
-- Phase 0 fully operational: no.
+- Golden evidence exists: yes.
+- Spec exists: yes.
+- Progress state and append-only log entry exist: yes.
+- Architecture laws checked: yes.
+- Phase 0 fully operational: yes.
 
 ## Behavior proven
 
-- The verification script exists and is executable.
-- The verification script fails closed when required tools are missing.
-- Gated debug output is available through `MULTIVERSE_CODEX_DEBUG=1`.
-- The Kubuntu bootstrap helper exists in the repo.
-- The Kubuntu bootstrap helper defaults to dry-run.
-- The Kubuntu bootstrap helper accepts explicit install mode only through `--install`.
-- The Kubuntu bootstrap helper prints the host-mutating commands during dry-run.
-- The Kubuntu bootstrap helper shell syntax passes `bash -n`.
+Owner-run workstation verification returned a clean pass on the target Kubuntu workstation:
+
+```txt
+Multiverse Codex Phase 0 workstation verification
+==================================================
+[PASS] git: git version 2.51.0
+[PASS] node: v24.14.1
+[PASS] pnpm: 10.33.2
+[PASS] psql: psql (PostgreSQL) 17.9 (Ubuntu 17.9-0ubuntu0.25.10.1)
+[PASS] systemctl: systemd 257 (257.9-0ubuntu2.4)
+[PASS] caddy: 2.6.2
+[PASS] make: GNU Make 4.4.1
+[PASS] curl: curl 8.14.1 (x86_64-pc-linux-gnu) libcurl/8.14.1 OpenSSL/3.5.3 zlib/1.3.1 brotli/1.1.0 zstd/1.5.7 libidn2/2.3.8 libpsl/0.21.2 libssh2/1.11.1 nghttp2/1.64.0 librtmp/2.3 OpenLDAP/2.6.10
+[PASS] jq: jq-1.8.1
+[PASS] openssl: OpenSSL 3.5.3 16 Sep 2025 (Library: OpenSSL 3.5.3 16 Sep 2025)
+[PASS] postgresql service: active
+==================================================
+[PASS] workstation bootstrap verified
+```
+
+Repository-side checks in the patch container verified the shell scripts and patch quality.
 
 ## Commands and tests run
+
+Owner-run on the target workstation:
+
+```bash
+bash scripts/verify-workstation.sh
+```
+
+Patch-container checks:
 
 ```bash
 bash -n scripts/verify-workstation.sh
 bash -n scripts/bootstrap-workstation-kubuntu.sh
 scripts/bootstrap-workstation-kubuntu.sh --dry-run
-scripts/verify-workstation.sh
 git diff --check
 for path in app scripts infra docs; do [ -d "$path" ] && find "$path" -type f \( -name "*.ts" -o -name "*.svelte" -o -name "*.js" -o -name "*.css" -o -name "*.sh" -o -name "*.md" \) -print0; done | xargs -0 wc -l | sort -n
-git apply --check /mnt/data/phase_000_bootstrap_script_repair.patch
+git apply --check /mnt/data/phase_000_close_workstation_bootstrap.patch
 ```
 
 ## Files changed
 
 - `docs/progress.json`
 - `docs/progress.jsonl`
+- `docs/dev/workstation.md`
 - `docs/specs/phase-000-spec.md`
 - `docs/closures/phase-000-closure.md`
 - `docs/goldens/phase-000.md`
@@ -55,30 +94,30 @@ git apply --check /mnt/data/phase_000_bootstrap_script_repair.patch
 
 ## Architecture findings
 
-The file-size review found two pre-existing canonical control documents over 1,000 LOC:
+Architecture laws were checked for this closure patch:
+
+- No changed file exceeds 1,000 LOC.
+- No route files exist yet.
+- No layout/application logic split exists yet because no app exists.
+- Scripts are purpose-scoped and fail closed.
+- Bootstrap install mode remains explicit and guarded.
+- No secrets, credentials, generated archives, or local machine files were added.
+
+The file-size review still reports two pre-existing canonical control documents over 1,000 LOC:
 
 - `docs/multiverse_codex_phase_plan.md`
 - `docs/multiverse_codex_phase_completion_checklist.md`
 
-This patch does not change those files. No changed file is over 1,000 LOC. Phase 0 remains open, so this patch does not use those oversized baseline docs to claim phase closure.
+Those documents are project-control inputs and were not changed by this closure patch.
 
 ## Known limitations
 
-- The current execution container does not have every required Phase 0 workstation tool installed.
-- The current execution container does not expose a normal active PostgreSQL systemd service.
-- The owner-run target workstation transcript still has missing tools and inactive PostgreSQL service before this bootstrap helper is applied.
-- These limitations prevent Phase 0 closure, but they do not invalidate this bootstrap-helper repair slice.
+None for Phase 0.
 
-## Deferral check
+## No deferred work confirmation
 
-No work required for a closed Phase 0 is claimed as complete here. Phase 0 remains open until the workstation verification script passes on the target machine.
+No required Phase 0 work is outstanding. The workstation bootstrap behavior is operational and verified on the primary workstation.
 
-## Architecture law check
+## Architecture law confirmation
 
-Architecture laws were checked for this patch slice:
-
-- No changed file is over 1,000 LOC.
-- No application logic/layout split exists yet because no app exists.
-- The scripts have one purpose each and fail closed.
-- The bootstrap helper defaults to dry-run before host mutation.
-- No secrets, credentials, generated archives, or local machine files were added.
+The architecture laws were checked. This phase closes without changed-file size violations, unguarded host mutation, secrets, mixed application concerns, or fabricated completion.

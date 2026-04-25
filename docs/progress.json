@@ -1,13 +1,13 @@
 {
   "current_phase": 0,
   "current_phase_title": "Workstation Bootstrap",
-  "phase_status": "in_progress",
-  "last_completed_phase": null,
-  "next_candidate_phase": 0,
-  "last_patch_id": "phase-000-bootstrap-script-repair",
-  "updated_at": "2026-04-25T20:04:25Z",
+  "phase_status": "complete",
+  "last_completed_phase": 0,
+  "next_candidate_phase": 1,
+  "last_patch_id": "phase-000-close-workstation-bootstrap",
+  "updated_at": "2026-04-25T20:27:06Z",
   "notes": [
-    "The applied phase-000-kubuntu-bootstrap artifact updated docs/logs to reference scripts/bootstrap-workstation-kubuntu.sh but the patch artifact did not include that file.",
-    "This repair patch adds the missing guarded Kubuntu/Ubuntu bootstrap helper and keeps Phase 0 open until scripts/verify-workstation.sh passes on the target workstation."
+    "The primary Kubuntu 25.10 workstation returned a clean scripts/verify-workstation.sh transcript for all Phase 0 required tools and the active PostgreSQL service.",
+    "The Kubuntu bootstrap helper now repairs the Caddy keyring path by using the /usr/share/keyrings location expected by the Caddy apt source list."
   ]
 }

@@ -5,6 +5,9 @@ set -u
 # Enable MULTIVERSE_CODEX_DEBUG=1 for command trace output around failing probes.
 
 failures=0
+probe_timeout_seconds="${MULTIVERSE_CODEX_TIMEOUT_SECONDS:-10}"
+probe_output=''
+probe_status=0
 
 log_debug() {
   if [ "${MULTIVERSE_CODEX_DEBUG:-0}" = "1" ]; then
@@ -25,24 +28,52 @@ first_line() {
   sed -n '1p'
 }
 
+run_probe_shell() {
+  probe_command="$1"
+
+  if command -v timeout >/dev/null 2>&1; then
+    log_debug "running with timeout ${probe_timeout_seconds}s: $probe_command"
+    probe_output=$(timeout "${probe_timeout_seconds}s" bash -lc "$probe_command" 2>&1)
+    probe_status=$?
+    if [ "$probe_status" -eq 124 ]; then
+      probe_output="probe timed out after ${probe_timeout_seconds}s"
+    fi
+    return
+  fi
+
+  log_debug "running: $probe_command"
+  probe_output=$(bash -lc "$probe_command" 2>&1)
+  probe_status=$?
+}
+
 require_command() {
   name="$1"
   version_command="$2"
+  probe_command="$version_command"
 
   if ! command -v "$name" >/dev/null 2>&1; then
     mark_fail "$name" "command not found"
     return
   fi
 
-  log_debug "running: $version_command"
-  output=$(bash -lc "$version_command" 2>&1)
-  status=$?
-  if [ "$status" -ne 0 ]; then
-    mark_fail "$name" "version probe failed: $output"
+  # Corepack-backed pnpm shims may attempt a download on first use.
+  # Disable that during verification so the probe stays read-only and fails fast.
+  if [ "$name" = "pnpm" ]; then
+    probe_command="COREPACK_ENABLE_NETWORK=0 $version_command"
+  fi
+
+  run_probe_shell "$probe_command"
+  if [ "$probe_status" -eq 124 ]; then
+    mark_fail "$name" "$probe_output: $version_command"
     return
   fi
 
-  mark_pass "$name" "$(printf '%s\n' "$output" | first_line)"
+  if [ "$probe_status" -ne 0 ]; then
+    mark_fail "$name" "version probe failed: $probe_output"
+    return
+  fi
+
+  mark_pass "$name" "$(printf '%s\n' "$probe_output" | first_line)"
 }
 
 require_service_probe() {
@@ -53,15 +84,18 @@ require_service_probe() {
     return
   fi
 
-  log_debug "running: systemctl is-active $service_name"
-  output=$(systemctl is-active "$service_name" 2>&1)
-  status=$?
-  if [ "$status" -ne 0 ]; then
-    mark_fail "postgresql service" "not active or unavailable: $output"
+  run_probe_shell "systemctl is-active $service_name"
+  if [ "$probe_status" -eq 124 ]; then
+    mark_fail "postgresql service" "$probe_output: systemctl is-active $service_name"
     return
   fi
 
-  mark_pass "postgresql service" "$output"
+  if [ "$probe_status" -ne 0 ]; then
+    mark_fail "postgresql service" "not active or unavailable: $probe_output"
+    return
+  fi
+
+  mark_pass "postgresql service" "$probe_output"
 }
 
 printf 'Multiverse Codex Phase 0 workstation verification\n'

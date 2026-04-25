@@ -135,8 +135,10 @@ run curl -fsSL "https://deb.nodesource.com/setup_${node_major}.x" -o "$nodesourc
 run sudo bash "$nodesource_setup"
 run sudo apt-get install -y nodejs
 
-run sudo install -d -m 0755 /etc/apt/keyrings
-run_shell 'curl -fsSL https://dl.cloudsmith.io/public/caddy/stable/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/caddy-stable-archive-keyring.gpg'
+run sudo install -d -m 0755 /usr/share/keyrings
+run sudo rm -f /etc/apt/keyrings/caddy-stable-archive-keyring.gpg
+run sudo rm -f /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+run_shell 'curl -fsSL https://dl.cloudsmith.io/public/caddy/stable/gpg.key | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg'
 run_shell 'curl -fsSL https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt | sudo tee /etc/apt/sources.list.d/caddy-stable.list >/dev/null'
 run sudo apt-get update
 run sudo apt-get install -y caddy

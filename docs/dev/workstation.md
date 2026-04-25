@@ -6,7 +6,7 @@ Phase 0 proves that the local workstation can run the native toolchain required 
 
 ## Target workstation snapshot
 
-Current primary workstation reported by the project owner:
+Primary workstation reported by the project owner:
 
 ```txt
 Operating System: Kubuntu 25.10
@@ -20,19 +20,6 @@ Memory: 64 GiB RAM
 Graphics Processor: AMD Radeon RX 7900 XT
 Manufacturer: ASUS
 ```
-
-Latest owner-run verification status:
-
-```txt
-PASS: git, systemctl, make, curl, jq, openssl
-FAIL: node, pnpm, psql, caddy, postgresql service
-```
-
-Phase 0 remains open until the failing probes pass on this workstation.
-
-## Patch repair note
-
-The applied `phase-000-kubuntu-bootstrap` repo state referenced `scripts/bootstrap-workstation-kubuntu.sh` in docs and progress, but the uploaded patch artifact did not include that script file. The `phase-000-bootstrap-script-repair` slice restores the helper so the documentation matches the checked-in implementation.
 
 ## Required tools
 
@@ -56,59 +43,6 @@ Optional tools that can improve the local workflow:
 - nvm, fnm, or asdf
 - VSCodium or another editor
 - DBeaver or pgAdmin
-
-## Kubuntu bootstrap helper
-
-This repository includes a guarded helper for Kubuntu/Ubuntu hosts:
-
-```bash
-scripts/bootstrap-workstation-kubuntu.sh --dry-run
-```
-
-The default mode is dry-run and makes no host changes. It prints the exact commands it would run.
-
-To install the missing Phase 0 tools on the target workstation:
-
-```bash
-scripts/bootstrap-workstation-kubuntu.sh --install
-```
-
-The helper installs or configures:
-
-- base CLI tools through `apt-get`
-- PostgreSQL server and client packages through `apt-get`
-- Node LTS through NodeSource, defaulting to Node major `24`
-- Caddy through the official Caddy/Cloudsmith apt repository
-- pnpm through Corepack when available, with npm fallback
-- PostgreSQL service activation through `systemctl enable --now postgresql`
-
-To choose a different Node LTS major explicitly:
-
-```bash
-scripts/bootstrap-workstation-kubuntu.sh --install --node-major 22
-```
-
-## Manual package sketch
-
-Use the checked-in helper when possible. These commands show the rough package groups for review before host mutation:
-
-```bash
-sudo apt-get update
-sudo apt-get install -y ca-certificates curl gnupg git make jq openssl postgresql postgresql-client
-```
-
-After Node is installed, enable pnpm with Corepack when available:
-
-```bash
-sudo corepack enable
-sudo corepack prepare pnpm@latest-10 --activate
-```
-
-If Corepack is unavailable or broken on the host:
-
-```bash
-sudo npm install -g pnpm@latest
-```
 
 ## Verification commands
 
@@ -140,6 +74,75 @@ For command-level probe output around failing checks, run:
 MULTIVERSE_CODEX_DEBUG=1 scripts/verify-workstation.sh
 ```
 
+## Verified success transcript
+
+The primary workstation returned a clean Phase 0 verification run:
+
+```txt
+Multiverse Codex Phase 0 workstation verification
+==================================================
+[PASS] git: git version 2.51.0
+[PASS] node: v24.14.1
+[PASS] pnpm: 10.33.2
+[PASS] psql: psql (PostgreSQL) 17.9 (Ubuntu 17.9-0ubuntu0.25.10.1)
+[PASS] systemctl: systemd 257 (257.9-0ubuntu2.4)
+[PASS] caddy: 2.6.2
+[PASS] make: GNU Make 4.4.1
+[PASS] curl: curl 8.14.1 (x86_64-pc-linux-gnu) libcurl/8.14.1 OpenSSL/3.5.3 zlib/1.3.1 brotli/1.1.0 zstd/1.5.7 libidn2/2.3.8 libpsl/0.21.2 libssh2/1.11.1 nghttp2/1.64.0 librtmp/2.3 OpenLDAP/2.6.10
+[PASS] jq: jq-1.8.1
+[PASS] openssl: OpenSSL 3.5.3 16 Sep 2025 (Library: OpenSSL 3.5.3 16 Sep 2025)
+[PASS] postgresql service: active
+==================================================
+[PASS] workstation bootstrap verified
+```
+
+## Kubuntu bootstrap helper
+
+This repository includes a guarded helper for Kubuntu/Ubuntu hosts:
+
+```bash
+scripts/bootstrap-workstation-kubuntu.sh --dry-run
+```
+
+The default mode is dry-run and makes no host changes. It prints the exact commands it would run.
+
+To install the missing Phase 0 tools on a Kubuntu/Ubuntu workstation:
+
+```bash
+scripts/bootstrap-workstation-kubuntu.sh --install
+```
+
+The helper installs or configures:
+
+- base CLI tools through `apt-get`
+- PostgreSQL server and client packages through `apt-get`
+- Node LTS through NodeSource, defaulting to Node major `24`
+- Caddy through the official Caddy/Cloudsmith apt repository
+- pnpm through Corepack when available, with npm fallback
+- PostgreSQL service activation through `systemctl enable --now postgresql`
+
+To choose a different Node LTS major explicitly:
+
+```bash
+scripts/bootstrap-workstation-kubuntu.sh --install --node-major 22
+```
+
+## Caddy keyring repair note
+
+An earlier install attempt hit an apt signature failure for the Caddy repository because the repository key was not available to apt at the expected keyring path. The bootstrap helper now writes the Caddy keyring to:
+
+```txt
+/usr/share/keyrings/caddy-stable-archive-keyring.gpg
+```
+
+It also removes the stale earlier copy at:
+
+```txt
+/etc/apt/keyrings/caddy-stable-archive-keyring.gpg
+```
+
+After that repair, `caddy version` passed on the target workstation.
+
 ## Expected success behavior
 
 A complete Phase 0 workstation returns only `[PASS]` lines and exits with status `0`.
@@ -153,10 +156,10 @@ A missing command, failed version probe, or inactive PostgreSQL service returns 
 - If `node` is missing, run the Kubuntu bootstrap helper or install Node LTS from a trusted package source.
 - If `pnpm` is missing but Node is installed, enable Corepack or install pnpm from npm.
 - If `psql` is missing, install PostgreSQL client tools.
-- If `caddy` is missing, install Caddy from the official Caddy apt repository or another trusted operating system package source.
+- If `caddy` is missing or apt reports `NO_PUBKEY`, rerun the updated bootstrap helper or refresh the Caddy keyring at `/usr/share/keyrings/caddy-stable-archive-keyring.gpg`.
 - If `systemctl is-active postgresql` reports `inactive`, run `sudo systemctl enable --now postgresql` and rerun the verifier.
 - If `systemctl` fails inside a container, rerun the probe on the actual systemd-based workstation or VM target.
 
 ## Phase status
 
-The repository now contains the verification harness, a guarded Kubuntu bootstrap helper, and documentation. Phase 0 remains open until the target workstation returns a clean verification run.
+Phase 0 is complete. The workstation bootstrap is verified on the primary workstation.
