@@ -1,0 +1,13 @@
+{
+  "current_phase": 0,
+  "current_phase_title": "Workstation Bootstrap",
+  "phase_status": "in_progress",
+  "last_completed_phase": null,
+  "next_candidate_phase": 0,
+  "last_patch_id": "phase-000-truth-repair",
+  "updated_at": "2026-04-25T18:06:34Z",
+  "notes": [
+    "This repository is still in Phase 0 because workstation tool verification has not passed in the available execution environment.",
+    "The prior progress.jsonl entry claimed files that were absent from the authoritative base tar; this patch restores the missing project-control artifacts and keeps the phase open."
+  ]
+}
