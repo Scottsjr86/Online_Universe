@@ -4,6 +4,32 @@
 
 Phase 0 proves that the local workstation can run the native toolchain required for Multiverse Codex development and deployment work.
 
+## Target workstation snapshot
+
+Current primary workstation reported by the project owner:
+
+```txt
+Operating System: Kubuntu 25.10
+KDE Plasma Version: 6.4.5
+KDE Frameworks Version: 6.17.0
+Qt Version: 6.9.2
+Kernel Version: 6.17.0-22-generic (64-bit)
+Graphics Platform: Wayland
+Processors: 16 x AMD Ryzen 7 5700X 8-Core Processor
+Memory: 64 GiB RAM
+Graphics Processor: AMD Radeon RX 7900 XT
+Manufacturer: ASUS
+```
+
+Latest owner-run verification status:
+
+```txt
+PASS: git, systemctl, make, curl, jq, openssl
+FAIL: node, pnpm, psql, caddy, postgresql service
+```
+
+Phase 0 remains open until the failing probes pass on this workstation.
+
 ## Required tools
 
 The workstation must provide:
@@ -27,20 +53,57 @@ Optional tools that can improve the local workflow:
 - VSCodium or another editor
 - DBeaver or pgAdmin
 
-## Ubuntu package sketch
+## Kubuntu bootstrap helper
 
-These commands are documentation only. Review package sources before running them on a real host.
+This repository includes a guarded helper for Kubuntu/Ubuntu hosts:
 
 ```bash
-sudo apt update
-sudo apt install -y git postgresql postgresql-client caddy make curl jq openssl
+scripts/bootstrap-workstation-kubuntu.sh --dry-run
 ```
 
-Install Node LTS and pnpm using the workstation owner's preferred Node manager or trusted system package source. After Node is installed, enable pnpm with Corepack when available:
+The default mode is dry-run and makes no host changes. It prints the exact commands it would run.
+
+To install the missing Phase 0 tools on the target workstation:
 
 ```bash
-corepack enable
-corepack prepare pnpm@latest --activate
+scripts/bootstrap-workstation-kubuntu.sh --install
+```
+
+The helper installs or configures:
+
+- base CLI tools through `apt-get`
+- PostgreSQL server and client packages through `apt-get`
+- Node LTS through NodeSource, defaulting to Node major `24`
+- Caddy through the official Caddy/Cloudsmith apt repository
+- pnpm through Corepack when available, with npm fallback
+- PostgreSQL service activation through `systemctl enable --now postgresql`
+
+To choose a different Node LTS major explicitly:
+
+```bash
+scripts/bootstrap-workstation-kubuntu.sh --install --node-major 22
+```
+
+## Manual package sketch
+
+Use the checked-in helper when possible. These commands show the rough package groups for review before host mutation:
+
+```bash
+sudo apt-get update
+sudo apt-get install -y ca-certificates curl gnupg git make jq openssl postgresql postgresql-client
+```
+
+After Node is installed, enable pnpm with Corepack when available:
+
+```bash
+sudo corepack enable
+sudo corepack prepare pnpm@latest-10 --activate
+```
+
+If Corepack is unavailable or broken on the host:
+
+```bash
+sudo npm install -g pnpm@latest
 ```
 
 ## Verification commands
@@ -83,12 +146,13 @@ A missing command, failed version probe, or inactive PostgreSQL service returns 
 
 ## Troubleshooting notes
 
-- If `pnpm` is missing but Node is installed, enable Corepack or install pnpm from a trusted source.
+- If `node` is missing, run the Kubuntu bootstrap helper or install Node LTS from a trusted package source.
+- If `pnpm` is missing but Node is installed, enable Corepack or install pnpm from npm.
 - If `psql` is missing, install PostgreSQL client tools.
-- If `caddy` is missing, install Caddy from the operating system package source or the official Caddy repository.
-- If `systemctl is-active postgresql` fails on a desktop Linux host, start and enable the PostgreSQL service with the host's service manager.
+- If `caddy` is missing, install Caddy from the official Caddy apt repository or another trusted operating system package source.
+- If `systemctl is-active postgresql` reports `inactive`, run `sudo systemctl enable --now postgresql` and rerun the verifier.
 - If `systemctl` fails inside a container, rerun the probe on the actual systemd-based workstation or VM target.
 
 ## Phase status
 
-The repository now contains the verification harness and documentation, but Phase 0 remains open until the target workstation returns a clean verification run.
+The repository now contains the verification harness, a guarded Kubuntu bootstrap helper, and documentation. Phase 0 remains open until the target workstation returns a clean verification run.

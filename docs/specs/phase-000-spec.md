@@ -6,14 +6,16 @@ Phase 0: Workstation Bootstrap
 
 ## Implemented behavior
 
-This phase currently implements the repository-side verification harness for the workstation bootstrap:
+This phase currently implements the repository-side verification and bootstrap harness for the workstation bootstrap:
 
 - `scripts/verify-workstation.sh` checks required command availability and version output.
 - The probe checks PostgreSQL service availability through `systemctl is-active postgresql`.
 - The probe exits nonzero when required tools or service checks fail.
 - `MULTIVERSE_CODEX_DEBUG=1` enables gated command-level probe output for diagnosing failures.
-- `docs/dev/workstation.md` documents required tools, verification commands, expected success behavior, expected failure behavior, and troubleshooting notes.
-- `docs/progress.json` restores the required machine-readable progress state.
+- `scripts/bootstrap-workstation-kubuntu.sh` provides a Kubuntu/Ubuntu bootstrap helper with dry-run as the default behavior.
+- `scripts/bootstrap-workstation-kubuntu.sh --install` installs the Phase 0 workstation tools, configures trusted package repositories for Node and Caddy, enables pnpm, and starts/enables PostgreSQL.
+- `docs/dev/workstation.md` documents required tools, the current target workstation state, bootstrap commands, verification commands, expected success behavior, expected failure behavior, and troubleshooting notes.
+- `docs/progress.json` records the current machine-readable phase state.
 
 ## Public/admin routes touched
 
@@ -32,11 +34,17 @@ None. No database schema exists in Phase 0.
 - Shell probe uses explicit command checks before version probes.
 - Shell probe fails closed when commands are missing or service checks fail.
 - Gated debug output is controlled by `MULTIVERSE_CODEX_DEBUG` and is silent by default.
+- Bootstrap helper defaults to dry-run and requires `--install` before mutating the host.
+- Bootstrap helper validates the requested Node major version.
+- Bootstrap helper performs an Ubuntu/Kubuntu host-shape check before install mode.
+- Bootstrap helper exits on unknown arguments instead of guessing.
 
 ## Tests and smokes added
 
 - `scripts/verify-workstation.sh`
+- `scripts/bootstrap-workstation-kubuntu.sh --dry-run`
+- `bash -n scripts/bootstrap-workstation-kubuntu.sh`
 
 ## Handoff notes for Phase 0 continuation
 
-Phase 0 is not closed. The next Phase 0 slice should be based on the latest tar and should close only after the target workstation or VM proves every required tool and PostgreSQL service check with a clean `scripts/verify-workstation.sh` run.
+Phase 0 is not closed. The next Phase 0 slice should be based on the latest tar and should close only after the target workstation proves every required tool and PostgreSQL service check with a clean `scripts/verify-workstation.sh` run.
