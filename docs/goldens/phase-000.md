@@ -6,18 +6,18 @@ Phase 0: Workstation Bootstrap
 
 ## Scope completed
 
-This patch adds the next Phase 0 workstation bootstrap slice:
+This patch repairs the Phase 0 workstation bootstrap slice:
 
-- Preserves the Phase 0 verification probe.
-- Adds `scripts/bootstrap-workstation-kubuntu.sh`, a guarded Kubuntu/Ubuntu helper for installing the currently missing workstation tools.
-- Documents the owner-reported Kubuntu 25.10 workstation state and failing probes.
-- Updates Phase 0 progress, spec, closure, and golden evidence without closing the phase.
+- Restores `scripts/bootstrap-workstation-kubuntu.sh`, which the applied repo docs and progress log referenced but the uploaded `phase_000_kubuntu_bootstrap.patch` artifact did not include.
+- Preserves `scripts/verify-workstation.sh` as the workstation proof probe.
+- Keeps the bootstrap helper dry-run-first, with `--install` required for host mutation.
+- Updates Phase 0 progress, spec, closure evidence, and golden evidence to match the actual repository state.
+- Keeps Phase 0 open until the target workstation returns a clean verification transcript.
 
 ## Files changed
 
 - `docs/progress.json`
 - `docs/progress.jsonl`
-- `docs/dev/workstation.md`
 - `docs/specs/phase-000-spec.md`
 - `docs/closures/phase-000-closure.md`
 - `docs/goldens/phase-000.md`
@@ -32,7 +32,7 @@ scripts/bootstrap-workstation-kubuntu.sh --dry-run
 scripts/verify-workstation.sh
 git diff --check
 for path in app scripts infra docs; do [ -d "$path" ] && find "$path" -type f \( -name "*.ts" -o -name "*.svelte" -o -name "*.js" -o -name "*.css" -o -name "*.sh" -o -name "*.md" \) -print0; done | xargs -0 wc -l | sort -n
-git apply --check /mnt/data/phase_000_kubuntu_bootstrap.patch
+git apply --check /mnt/data/phase_000_bootstrap_script_repair.patch
 ```
 
 ## Test and smoke output summary
@@ -55,8 +55,13 @@ NodeSource major: 24.x
 + curl -fsSL https://deb.nodesource.com/setup_24.x -o /tmp/multiverse-codex-nodesource-setup.sh
 + sudo bash /tmp/multiverse-codex-nodesource-setup.sh
 + sudo apt-get install -y nodejs
++ sudo install -d -m 0755 /etc/apt/keyrings
++ curl -fsSL https://dl.cloudsmith.io/public/caddy/stable/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/caddy-stable-archive-keyring.gpg
++ curl -fsSL https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt | sudo tee /etc/apt/sources.list.d/caddy-stable.list >/dev/null
++ sudo apt-get update
 + sudo apt-get install -y caddy
 + sudo systemctl enable --now postgresql
++ if command -v corepack >/dev/null 2>&1; then sudo corepack enable && sudo corepack prepare pnpm@latest-10 --activate; else sudo npm install -g pnpm@latest; fi
 [PASS] dry-run complete; no host changes were made. Re-run with --install to apply.
 ```
 
@@ -85,7 +90,7 @@ Architecture file-size review passed for changed files. Two pre-existing canonic
 
 No changed file is over 1,000 LOC.
 
-`git apply --check /mnt/data/phase_000_kubuntu_bootstrap.patch` passed.
+`git apply --check /mnt/data/phase_000_bootstrap_script_repair.patch` passed.
 
 ## Known limitations
 
@@ -96,7 +101,7 @@ No changed file is over 1,000 LOC.
 
 ## Final commit hash
 
-Baseline commit in the temporary work repo before this patch: `7f0c23f`.
+Baseline commit in the temporary work repo before this patch: `bb23bc3`.
 
 No final project commit exists in the source tar workflow because patches are generated from a temporary git repo and delivered as unified diffs.
 

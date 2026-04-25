@@ -13,9 +13,13 @@ This phase currently implements the repository-side verification and bootstrap h
 - The probe exits nonzero when required tools or service checks fail.
 - `MULTIVERSE_CODEX_DEBUG=1` enables gated command-level probe output for diagnosing failures.
 - `scripts/bootstrap-workstation-kubuntu.sh` provides a Kubuntu/Ubuntu bootstrap helper with dry-run as the default behavior.
-- `scripts/bootstrap-workstation-kubuntu.sh --install` installs the Phase 0 workstation tools, configures trusted package repositories for Node and Caddy, enables pnpm, and starts/enables PostgreSQL.
+- `scripts/bootstrap-workstation-kubuntu.sh --install` installs the Phase 0 workstation tools, configures package repositories for Node and Caddy, enables pnpm, and starts/enables PostgreSQL.
 - `docs/dev/workstation.md` documents required tools, the current target workstation state, bootstrap commands, verification commands, expected success behavior, expected failure behavior, and troubleshooting notes.
 - `docs/progress.json` records the current machine-readable phase state.
+
+## Repair note
+
+The applied Phase 0 repo state referenced `scripts/bootstrap-workstation-kubuntu.sh` in the docs and progress log, but the uploaded `phase_000_kubuntu_bootstrap.patch` artifact did not contain the script file. This repair slice restores that missing implementation file and refreshes evidence so the docs again match the code.
 
 ## Public/admin routes touched
 
@@ -36,7 +40,7 @@ None. No database schema exists in Phase 0.
 - Gated debug output is controlled by `MULTIVERSE_CODEX_DEBUG` and is silent by default.
 - Bootstrap helper defaults to dry-run and requires `--install` before mutating the host.
 - Bootstrap helper validates the requested Node major version.
-- Bootstrap helper performs an Ubuntu/Kubuntu host-shape check before install mode.
+- Bootstrap helper performs an Ubuntu-family host-shape check before install mode.
 - Bootstrap helper exits on unknown arguments instead of guessing.
 
 ## Tests and smokes added

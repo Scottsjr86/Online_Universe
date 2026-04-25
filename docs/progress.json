@@ -4,10 +4,10 @@
   "phase_status": "in_progress",
   "last_completed_phase": null,
   "next_candidate_phase": 0,
-  "last_patch_id": "phase-000-kubuntu-bootstrap",
-  "updated_at": "2026-04-25T19:54:05Z",
+  "last_patch_id": "phase-000-bootstrap-script-repair",
+  "updated_at": "2026-04-25T20:04:25Z",
   "notes": [
-    "The target workstation verification transcript still showed missing node, pnpm, psql, caddy, and inactive postgresql service before this patch.",
-    "This patch adds a guarded Kubuntu/Ubuntu bootstrap helper and keeps Phase 0 open until scripts/verify-workstation.sh passes on the target workstation."
+    "The applied phase-000-kubuntu-bootstrap artifact updated docs/logs to reference scripts/bootstrap-workstation-kubuntu.sh but the patch artifact did not include that file.",
+    "This repair patch adds the missing guarded Kubuntu/Ubuntu bootstrap helper and keeps Phase 0 open until scripts/verify-workstation.sh passes on the target workstation."
   ]
 }

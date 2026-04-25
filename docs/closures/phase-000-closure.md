@@ -6,11 +6,10 @@ Phase 0 is open and not closed.
 
 ## Scope completed in this patch
 
-- Added a guarded Kubuntu/Ubuntu workstation bootstrap helper.
-- Documented the current target workstation status from the owner-run verification transcript.
-- Updated the Phase 0 spec to include the new bootstrap helper, its guard behavior, and its test surface.
-- Updated the Phase 0 golden with the new commands and results.
-- Appended progress for this Phase 0 continuation slice.
+- Repaired a truth gap where the applied repo docs and progress log referenced `scripts/bootstrap-workstation-kubuntu.sh`, but the uploaded patch artifact did not include the file.
+- Added the missing guarded Kubuntu/Ubuntu workstation bootstrap helper.
+- Kept dry-run as the default behavior and required `--install` before host mutation.
+- Refreshed Phase 0 spec, golden evidence, and progress state to match the actual repo state.
 
 ## Checklist status
 
@@ -27,6 +26,7 @@ Phase 0 is open and not closed.
 - The verification script exists and is executable.
 - The verification script fails closed when required tools are missing.
 - Gated debug output is available through `MULTIVERSE_CODEX_DEBUG=1`.
+- The Kubuntu bootstrap helper exists in the repo.
 - The Kubuntu bootstrap helper defaults to dry-run.
 - The Kubuntu bootstrap helper accepts explicit install mode only through `--install`.
 - The Kubuntu bootstrap helper prints the host-mutating commands during dry-run.
@@ -41,14 +41,13 @@ scripts/bootstrap-workstation-kubuntu.sh --dry-run
 scripts/verify-workstation.sh
 git diff --check
 for path in app scripts infra docs; do [ -d "$path" ] && find "$path" -type f \( -name "*.ts" -o -name "*.svelte" -o -name "*.js" -o -name "*.css" -o -name "*.sh" -o -name "*.md" \) -print0; done | xargs -0 wc -l | sort -n
-git apply --check /mnt/data/phase_000_kubuntu_bootstrap.patch
+git apply --check /mnt/data/phase_000_bootstrap_script_repair.patch
 ```
 
 ## Files changed
 
 - `docs/progress.json`
 - `docs/progress.jsonl`
-- `docs/dev/workstation.md`
 - `docs/specs/phase-000-spec.md`
 - `docs/closures/phase-000-closure.md`
 - `docs/goldens/phase-000.md`
@@ -68,7 +67,7 @@ This patch does not change those files. No changed file is over 1,000 LOC. Phase
 - The current execution container does not have every required Phase 0 workstation tool installed.
 - The current execution container does not expose a normal active PostgreSQL systemd service.
 - The owner-run target workstation transcript still has missing tools and inactive PostgreSQL service before this bootstrap helper is applied.
-- These limitations prevent Phase 0 closure, but they do not invalidate this bootstrap-helper patch slice.
+- These limitations prevent Phase 0 closure, but they do not invalidate this bootstrap-helper repair slice.
 
 ## Deferral check
 

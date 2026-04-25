@@ -30,6 +30,10 @@ FAIL: node, pnpm, psql, caddy, postgresql service
 
 Phase 0 remains open until the failing probes pass on this workstation.
 
+## Patch repair note
+
+The applied `phase-000-kubuntu-bootstrap` repo state referenced `scripts/bootstrap-workstation-kubuntu.sh` in docs and progress, but the uploaded patch artifact did not include that script file. The `phase-000-bootstrap-script-repair` slice restores the helper so the documentation matches the checked-in implementation.
+
 ## Required tools
 
 The workstation must provide:
