@@ -21,6 +21,8 @@ dist/
 !.env.example
 
 # Logs and local runtime output
+__pycache__/
+*.pyc
 *.log
 logs/
 .tmp/

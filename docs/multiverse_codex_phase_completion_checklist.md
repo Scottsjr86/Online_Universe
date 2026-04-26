@@ -13,6 +13,18 @@ This is the closure contract for the Multiverse Codex build. A phase is complete
 - [ ] A phase cannot close if it breaks any previously locked golden unless the current phase intentionally updates that golden with a justified behavior change.
 - [ ] When a test fails, add or use gated debugging around the failure area, fix the issue, keep useful gated debug hooks, and remove noisy debug-only execution paths.
 
+## Local CI Law
+
+Every phase closure must run through the local CI lane system before it can close.
+
+- [ ] `scripts/local-ci.sh quick` exists and passes for fast patch-loop checks.
+- [ ] `scripts/local-ci.sh professional` exists and passes before any phase is marked complete.
+- [ ] `scripts/local-ci.sh release` exists and passes when preparing a release-grade handoff.
+- [ ] `make ci-quick`, `make ci-professional`, `make ci-release`, and `make phase-close` route to the CI lanes.
+- [ ] New tests, smokes, drift checks, or golden checks added by a phase are wired into the professional lane before closure.
+- [ ] Golden evidence records the CI lane output used to close the phase.
+- [ ] No `.gitkeep` sentinels are used to preserve directories; use explicit README notes or real tracked files.
+
 ## Required Golden Format
 
 Each phase locks evidence in `docs/goldens/phase-###.md`.
@@ -66,6 +78,7 @@ Each phase locks evidence in `docs/goldens/phase-###.md`.
 - [ ] No deferred work ever: no TODO/FIXME/stub/placeholder/mocked-success may count as completion.
 - [ ] No unrelated objectives, surprise refactors, or scope braid.
 - [ ] No secrets, private keys, real credentials, production media, or accidental local files committed.
+- [ ] No `.gitkeep` sentinels; tracked empty roots must use explicit README notes or real purpose-owned files.
 
 ### Phase 1: Repository Skeleton
 
@@ -73,7 +86,7 @@ Each phase locks evidence in `docs/goldens/phase-###.md`.
 
 **Scope lock:** Create top-level layout: `multiverse-codex/; app/; docs/; infra/; scripts/; .gitignore; README.md; Makefile`
 
-**Expected artifacts:** `README.md; docs/project/vision.md; docs/project/phase-plan.md; .gitignore; Makefile`
+**Expected artifacts:** `README.md; docs/project/vision.md; docs/project/phase-plan.md; .gitignore; Makefile; app/README.md; infra/README.md; scripts/local-ci.sh; scripts/local_ci.py`
 
 **What must be true to call this phase fully complete:**
 
@@ -86,6 +99,10 @@ Each phase locks evidence in `docs/goldens/phase-###.md`.
 **Tests that validate behavior matches intent:**
 
 - [ ] Source smoke check: `git status; make help`
+- [ ] `scripts/local-ci.sh quick` passes.
+- [ ] `scripts/local-ci.sh professional` passes before closure.
+- [ ] `scripts/local-ci.sh release` passes for release-grade handoff confidence.
+- [ ] `make phase-close` passes and maps to the professional lane.
 - [ ] Run setup/build/check commands from a clean shell and verify the documented happy path works without hidden local state.
 - [ ] Run `git diff --check` and project lint/typecheck/build commands where applicable.
 - [ ] Verify failure cases fail cleanly instead of silently succeeding.

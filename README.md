@@ -6,8 +6,8 @@ The finished project will become a public lore site and creator-owned admin tool
 
 ## Current phase state
 
-- Last completed phase: Phase 0, Workstation Bootstrap
-- Current phase after this patch: Phase 1, Repository Skeleton
+- Last completed phase: Phase 1, Repository Skeleton
+- Current phase after this patch: Phase 1, Repository Skeleton re-closed under local CI
 - Next candidate phase: Phase 2, Project Vision and Naming Lock
 
 Machine-readable state lives in `docs/progress.json`.
@@ -20,8 +20,10 @@ multiverse-codex/
   app/      Application source root, beginning in Phase 3.
   docs/     Project control docs, specs, closures, goldens, and design notes.
   infra/    Native deployment, Caddy, systemd, and ops configuration.
-  scripts/  Workstation, dev, build, database, and ops scripts.
+  scripts/  Workstation, dev, build, database, ops, and local CI scripts.
 ```
+
+`app/` and `infra/` are tracked with explicit README notes instead of `.gitkeep` sentinels.
 
 ## Canonical project-control docs
 
@@ -34,12 +36,16 @@ docs/multiverse_codex_fresh_chat_workflow_header.md
 
 These documents define the build order, closure contract, architecture laws, and patch workflow.
 
-## Phase 1 smoke checks
+## Local CI lanes
 
 ```bash
-git status --short
-make help
+scripts/local-ci.sh quick
+scripts/local-ci.sh professional
+scripts/local-ci.sh release
+make phase-close
 ```
+
+The professional lane is the phase-close gate. New tests, smokes, drift checks, and golden checks should be wired into that lane before a phase is marked complete.
 
 ## Workstation verification
 

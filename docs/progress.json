@@ -4,10 +4,12 @@
   "phase_status": "complete",
   "last_completed_phase": 1,
   "next_candidate_phase": 2,
-  "last_patch_id": "phase-001-repository-skeleton",
-  "updated_at": "2026-04-25T20:43:06Z",
+  "last_patch_id": "phase-001-local-ci-gate-repair",
+  "updated_at": "2026-04-26T01:37:00Z",
   "notes": [
-    "Phase 1 created the tracked top-level repository skeleton, README, Makefile, project vision seed, and phase-plan index.",
-    "Phase 0 remains closed based on the owner-run clean workstation verification transcript recorded in docs/goldens/phase-000.md."
+    "Phase 1 was re-audited before Phase 2 because the authoritative base still contained .gitkeep sentinels and lacked the requested local CI gate.",
+    "The repository skeleton now uses app/README.md and infra/README.md, not .gitkeep files.",
+    "scripts/local-ci.sh and scripts/local_ci.py define quick, professional, and release lanes; make phase-close maps to the professional lane.",
+    "Phase 2 remains the next candidate phase after this ladder repair."
   ]
 }

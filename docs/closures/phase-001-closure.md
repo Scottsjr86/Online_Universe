@@ -6,11 +6,11 @@ Phase 1: Repository Skeleton
 
 ## Closure status
 
-Phase 1 is complete.
+Phase 1 is complete after re-audit and local CI gate repair.
 
 ## Scope completed
 
-The repository now has a clear tracked skeleton:
+The repository has a clear tracked skeleton:
 
 ```txt
 multiverse-codex/
@@ -30,13 +30,23 @@ The Phase 1 expected artifacts exist:
 - `docs/project/phase-plan.md`
 - `.gitignore`
 - `Makefile`
+- `app/README.md`
+- `infra/README.md`
+- `scripts/local-ci.sh`
+- `scripts/local_ci.py`
 
 ## Checklist status
 
 - Repository skeleton exists: yes.
 - Expected Phase 1 artifacts exist: yes.
+- `.gitkeep` sentinels are absent: yes.
 - `make help` runs: yes.
 - `git status --short` was run: yes.
+- Local CI quick lane passes: yes.
+- Local CI professional lane passes: yes.
+- Local CI release lane passes: yes.
+- `make phase-close` maps to and passes the professional lane: yes.
+- `docs/multiverse_codex_phase_completion_checklist.md` was updated for the new CI closure law: yes.
 - Progress state and append-only log entry exist: yes.
 - Golden evidence exists: yes.
 - Spec exists: yes.
@@ -45,11 +55,15 @@ The Phase 1 expected artifacts exist:
 
 ## Behavior proven
 
-`make help` prints the available developer targets.
+`make help` prints the developer command surface.
 
 `make phase-docs` lists the canonical phase-control documents.
 
-`git status --short` shows only the intended Phase 1 patch files in the temporary work repo.
+`scripts/local-ci.sh quick`, `scripts/local-ci.sh professional`, and `scripts/local-ci.sh release` run through the Python CI runner.
+
+`make phase-close` runs the professional local CI lane.
+
+The professional lane verifies required paths, shell syntax, Python syntax, Makefile command surfaces, `git diff --check`, progress state, progress log integrity, completed-phase evidence files, checklist CI law presence, no `.gitkeep` sentinels, and architecture file-size gates.
 
 ## Commands and tests run
 
@@ -57,11 +71,15 @@ The Phase 1 expected artifacts exist:
 git status --short
 make help
 make phase-docs
-bash -n scripts/verify-workstation.sh
-bash -n scripts/bootstrap-workstation-kubuntu.sh
+scripts/local-ci.sh quick
+scripts/local-ci.sh professional
+scripts/local-ci.sh release
+make ci-quick
+make ci-professional
+make ci-release
+make phase-close
 git diff --check
-for path in app scripts infra docs; do [ -d "$path" ] && find "$path" -type f \( -name "*.ts" -o -name "*.svelte" -o -name "*.js" -o -name "*.css" -o -name "*.sh" -o -name "*.md" \) -print0; done | xargs -0 wc -l | sort -n
-git apply --check /mnt/data/phase_001_repository_skeleton.patch
+git apply --check /mnt/data/phase_001_local_ci_gate_repair.patch
 ```
 
 ## Files changed
@@ -69,10 +87,13 @@ git apply --check /mnt/data/phase_001_repository_skeleton.patch
 - `.gitignore`
 - `README.md`
 - `Makefile`
-- `app/.gitkeep`
-- `infra/.gitkeep`
-- `docs/project/vision.md`
-- `docs/project/phase-plan.md`
+- `app/.gitkeep` removed
+- `infra/.gitkeep` removed
+- `app/README.md`
+- `infra/README.md`
+- `scripts/local-ci.sh`
+- `scripts/local_ci.py`
+- `docs/multiverse_codex_phase_completion_checklist.md`
 - `docs/progress.json`
 - `docs/progress.jsonl`
 - `docs/specs/phase-001-spec.md`
@@ -83,21 +104,23 @@ git apply --check /mnt/data/phase_001_repository_skeleton.patch
 
 Architecture laws were checked for this patch:
 
-- No changed file exceeds 1,000 LOC.
-- No changed file enters the 750 LOC warning zone.
+- No changed code/script file exceeds 1,000 LOC.
+- No changed code/script file enters the 750 LOC warning zone.
 - No route files exist yet.
 - No app logic exists yet.
 - No data model exists yet.
 - No UI/layout code exists yet.
 - `Makefile` is a thin command surface.
+- `scripts/local-ci.sh` is a thin command surface.
+- `scripts/local_ci.py` owns CI behavior and does not mutate host state.
 - No secrets, credentials, generated archives, local media, or accidental workstation files were added.
 
-The file-size review still reports two pre-existing canonical control documents over 1,000 LOC:
+The file-size review reports two documented canonical control-doc size exceptions:
 
 - `docs/multiverse_codex_phase_plan.md`
 - `docs/multiverse_codex_phase_completion_checklist.md`
 
-Those documents are project-control inputs and were not changed by this patch.
+The professional lane fails any unknown file over 1,000 LOC.
 
 ## Known limitations
 
@@ -105,7 +128,7 @@ None for Phase 1.
 
 ## No deferred work confirmation
 
-No required Phase 1 work is outstanding. The repository skeleton exists, is tracked, and passes the Phase 1 smoke checks.
+No required Phase 1 work is outstanding. The repository skeleton exists, avoids `.gitkeep`, is locally gated, and passes the Phase 1 smoke and CI checks.
 
 ## Architecture law confirmation
 
