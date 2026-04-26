@@ -1,6 +1,8 @@
 SHELL := /usr/bin/env bash
+PYTHON ?= python3
+CI := PYTHONDONTWRITEBYTECODE=1 $(PYTHON) scripts/run_ci.py
 
-.PHONY: help status verify-workstation phase-docs ci-quick ci-professional ci-release phase-close
+.PHONY: help status verify-workstation phase-docs ci-list ci-quick ci-professional ci-release ci-enterprise phase-close
 
 help:
 	@printf 'Multiverse Codex developer targets\n'
@@ -9,9 +11,11 @@ help:
 	@printf 'status               Show concise git status and progress state.\n'
 	@printf 'verify-workstation   Run the Phase 0 workstation verification script.\n'
 	@printf 'phase-docs           List canonical phase-control documents.\n'
-	@printf 'ci-quick             Run fast local CI checks.\n'
+	@printf 'ci-list              List repo-owned local CI lanes.\n'
+	@printf 'ci-quick             Run the fast local CI guardrail.\n'
 	@printf 'ci-professional      Run the professional phase-close gate.\n'
-	@printf 'ci-release           Run the deepest local release gate currently available.\n'
+	@printf 'ci-release           Run ship-adjacent verification.\n'
+	@printf 'ci-enterprise        Run the deepest local verification lane.\n'
 	@printf 'phase-close          Alias for ci-professional.\n'
 
 status:
@@ -29,13 +33,19 @@ phase-docs:
 		docs/multiverse_codex_architecture_laws.md \
 		docs/multiverse_codex_fresh_chat_workflow_header.md
 
+ci-list:
+	@$(CI) --list
+
 ci-quick:
-	@bash scripts/local-ci.sh quick
+	@$(CI) quick
 
 ci-professional:
-	@bash scripts/local-ci.sh professional
+	@$(CI) professional
 
 ci-release:
-	@bash scripts/local-ci.sh release
+	@$(CI) release
+
+ci-enterprise:
+	@$(CI) enterprise
 
 phase-close: ci-professional

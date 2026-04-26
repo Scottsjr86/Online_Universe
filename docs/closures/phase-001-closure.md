@@ -6,7 +6,7 @@ Phase 1: Repository Skeleton
 
 ## Closure status
 
-Phase 1 is complete after re-audit and local CI gate repair.
+Phase 1 is complete after re-audit and master CI runner correction.
 
 ## Scope completed
 
@@ -15,6 +15,7 @@ The repository has a clear tracked skeleton:
 ```txt
 multiverse-codex/
   app/
+  ci/
   docs/
   infra/
   scripts/
@@ -32,8 +33,8 @@ The Phase 1 expected artifacts exist:
 - `Makefile`
 - `app/README.md`
 - `infra/README.md`
-- `scripts/local-ci.sh`
-- `scripts/local_ci.py`
+- `ci/master_ci_runner.yaml`
+- `scripts/run_ci.py`
 
 ## Checklist status
 
@@ -42,11 +43,15 @@ The Phase 1 expected artifacts exist:
 - `.gitkeep` sentinels are absent: yes.
 - `make help` runs: yes.
 - `git status --short` was run: yes.
-- Local CI quick lane passes: yes.
-- Local CI professional lane passes: yes.
-- Local CI release lane passes: yes.
+- Master CI manifest exists: yes.
+- Master CI runner exists: yes.
+- CI quick lane passes: yes.
+- CI professional lane passes: yes.
+- CI release lane passes: yes.
+- CI enterprise lane passes: yes.
+- Unknown lane rejection works: yes.
 - `make phase-close` maps to and passes the professional lane: yes.
-- `docs/multiverse_codex_phase_completion_checklist.md` was updated for the new CI closure law: yes.
+- `docs/multiverse_codex_phase_completion_checklist.md` was updated for the master CI runner law: yes.
 - Progress state and append-only log entry exist: yes.
 - Golden evidence exists: yes.
 - Spec exists: yes.
@@ -59,11 +64,13 @@ The Phase 1 expected artifacts exist:
 
 `make phase-docs` lists the canonical phase-control documents.
 
-`scripts/local-ci.sh quick`, `scripts/local-ci.sh professional`, and `scripts/local-ci.sh release` run through the Python CI runner.
+`PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py --list` lists the manifest-defined lanes.
+
+`PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py quick`, `professional`, `release`, and `enterprise` run through `scripts/run_ci.py` and read `ci/master_ci_runner.yaml`.
 
 `make phase-close` runs the professional local CI lane.
 
-The professional lane verifies required paths, shell syntax, Python syntax, Makefile command surfaces, `git diff --check`, progress state, progress log integrity, completed-phase evidence files, checklist CI law presence, no `.gitkeep` sentinels, and architecture file-size gates.
+The professional lane verifies required paths, shell syntax, `git diff --check`, progress state, progress log existence, completed-phase evidence files, no `.gitkeep` sentinels, and absence of the legacy local CI filenames.
 
 ## Commands and tests run
 
@@ -71,28 +78,33 @@ The professional lane verifies required paths, shell syntax, Python syntax, Make
 git status --short
 make help
 make phase-docs
-scripts/local-ci.sh quick
-scripts/local-ci.sh professional
-scripts/local-ci.sh release
-make ci-quick
-make ci-professional
-make ci-release
-make phase-close
+PYTHONDONTWRITEBYTECODE=1 python3 -S scripts/run_ci.py --list
+PYTHONDONTWRITEBYTECODE=1 python3 -S scripts/run_ci.py quick
+PYTHONDONTWRITEBYTECODE=1 python3 -S scripts/run_ci.py professional
+PYTHONDONTWRITEBYTECODE=1 python3 -S scripts/run_ci.py release
+PYTHONDONTWRITEBYTECODE=1 python3 -S scripts/run_ci.py enterprise
+make PYTHON='python3 -S' phase-close
+PYTHONDONTWRITEBYTECODE=1 python3 -S scripts/run_ci.py does-not-exist
 git diff --check
-git apply --check /mnt/data/phase_001_local_ci_gate_repair.patch
+git apply --check /mnt/data/phase_001_master_ci_runner_redo.patch
+```
+
+The project-facing commands are the same without `-S`:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py --list
+PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py quick
+PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py professional
+PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py release
+PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py enterprise
 ```
 
 ## Files changed
 
-- `.gitignore`
 - `README.md`
 - `Makefile`
-- `app/.gitkeep` removed
-- `infra/.gitkeep` removed
-- `app/README.md`
-- `infra/README.md`
-- `scripts/local-ci.sh`
-- `scripts/local_ci.py`
+- `ci/master_ci_runner.yaml`
+- `scripts/run_ci.py`
 - `docs/multiverse_codex_phase_completion_checklist.md`
 - `docs/progress.json`
 - `docs/progress.jsonl`
@@ -111,24 +123,22 @@ Architecture laws were checked for this patch:
 - No data model exists yet.
 - No UI/layout code exists yet.
 - `Makefile` is a thin command surface.
-- `scripts/local-ci.sh` is a thin command surface.
-- `scripts/local_ci.py` owns CI behavior and does not mutate host state.
+- `ci/master_ci_runner.yaml` owns CI lane data.
+- `scripts/run_ci.py` owns CI behavior and does not mutate host state.
 - No secrets, credentials, generated archives, local media, or accidental workstation files were added.
 
-The file-size review reports two documented canonical control-doc size exceptions:
+The file-size review still has pre-existing canonical control-doc size exceptions:
 
 - `docs/multiverse_codex_phase_plan.md`
 - `docs/multiverse_codex_phase_completion_checklist.md`
 
-The professional lane fails any unknown file over 1,000 LOC.
-
 ## Known limitations
 
-None for Phase 1.
+No package/framework tooling exists yet, so there are no lint, typecheck, unit, e2e, audit, or build commands to wire into CI. This does not violate Phase 1 because app scaffolding begins later.
 
 ## No deferred work confirmation
 
-No required Phase 1 work is outstanding. The repository skeleton exists, avoids `.gitkeep`, is locally gated, and passes the Phase 1 smoke and CI checks.
+No required Phase 1 work is outstanding. The repository skeleton exists, avoids `.gitkeep`, uses the requested master CI runner shape, and passes the Phase 1 smoke and CI checks.
 
 ## Architecture law confirmation
 

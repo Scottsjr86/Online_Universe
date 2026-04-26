@@ -1,0 +1,77 @@
+lanes:
+  quick:
+    description: Fast local guardrail for patch-loop work.
+    commands:
+      - name: Require Makefile
+        run: test -f Makefile
+      - name: Require phase plan
+        run: test -f docs/multiverse_codex_phase_plan.md
+      - name: Require phase completion checklist
+        run: test -f docs/multiverse_codex_phase_completion_checklist.md
+      - name: Require architecture laws
+        run: test -f docs/multiverse_codex_architecture_laws.md
+      - name: Require fresh-chat workflow header
+        run: test -f docs/multiverse_codex_fresh_chat_workflow_header.md
+      - name: Check workstation verifier shell syntax
+        run: bash -n scripts/verify-workstation.sh
+      - name: Check Kubuntu bootstrap shell syntax
+        run: bash -n scripts/bootstrap-workstation-kubuntu.sh
+
+  professional:
+    description: Broader phase-close confidence lane.
+    extends: quick
+    commands:
+      - name: Check git diff whitespace
+        run: git diff --check
+      - name: Require progress state
+        run: test -f docs/progress.json
+      - name: Require append-only progress log
+        run: test -f docs/progress.jsonl
+      - name: Require Phase 0 spec
+        run: test -f docs/specs/phase-000-spec.md
+      - name: Require Phase 0 closure
+        run: test -f docs/closures/phase-000-closure.md
+      - name: Require Phase 0 golden
+        run: test -f docs/goldens/phase-000.md
+      - name: Require Phase 1 spec
+        run: test -f docs/specs/phase-001-spec.md
+      - name: Require Phase 1 closure
+        run: test -f docs/closures/phase-001-closure.md
+      - name: Require Phase 1 golden
+        run: test -f docs/goldens/phase-001.md
+      - name: Reject app .gitkeep sentinel
+        run: test ! -e app/.gitkeep
+      - name: Reject infra .gitkeep sentinel
+        run: test ! -e infra/.gitkeep
+      - name: Reject legacy local CI shell wrapper
+        run: test ! -e scripts/local-ci.sh
+      - name: Reject legacy local CI Python runner
+        run: test ! -e scripts/local_ci.py
+
+  release:
+    description: Ship-adjacent local verification.
+    extends: professional
+    commands:
+      - name: Require CI manifest
+        run: test -f ci/master_ci_runner.yaml
+      - name: Require CI runner
+        run: test -f scripts/run_ci.py
+      - name: Require repository README
+        run: test -f README.md
+      - name: Require app root note
+        run: test -f app/README.md
+      - name: Require infra root note
+        run: test -f infra/README.md
+      - name: Show repository status
+        run: git status --short
+
+  enterprise:
+    description: Deepest local verification currently available before app scaffolding exists.
+    extends: release
+    commands:
+      - name: Require workstation docs
+        run: test -f docs/dev/workstation.md
+      - name: Require project vision seed
+        run: test -f docs/project/vision.md
+      - name: Require project phase-plan index
+        run: test -f docs/project/phase-plan.md

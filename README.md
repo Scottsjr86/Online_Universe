@@ -7,7 +7,7 @@ The finished project will become a public lore site and creator-owned admin tool
 ## Current phase state
 
 - Last completed phase: Phase 1, Repository Skeleton
-- Current phase after this patch: Phase 1, Repository Skeleton re-closed under local CI
+- Current phase after this patch: Phase 1, Repository Skeleton re-closed under the repo-owned master CI runner
 - Next candidate phase: Phase 2, Project Vision and Naming Lock
 
 Machine-readable state lives in `docs/progress.json`.
@@ -18,9 +18,10 @@ Append-only patch history lives in `docs/progress.jsonl`.
 ```txt
 multiverse-codex/
   app/      Application source root, beginning in Phase 3.
+  ci/       Repo-owned local CI manifest.
   docs/     Project control docs, specs, closures, goldens, and design notes.
   infra/    Native deployment, Caddy, systemd, and ops configuration.
-  scripts/  Workstation, dev, build, database, ops, and local CI scripts.
+  scripts/  Workstation, dev, build, database, ops, and CI runner scripts.
 ```
 
 `app/` and `infra/` are tracked with explicit README notes instead of `.gitkeep` sentinels.
@@ -38,14 +39,35 @@ These documents define the build order, closure contract, architecture laws, and
 
 ## Local CI lanes
 
+The repo-owned local CI system is defined by:
+
+```txt
+ci/master_ci_runner.yaml
+scripts/run_ci.py
+```
+
+Run lanes from the repo root:
+
 ```bash
-scripts/local-ci.sh quick
-scripts/local-ci.sh professional
-scripts/local-ci.sh release
+PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py --list
+PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py quick
+PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py professional
+PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py release
+PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py enterprise
+```
+
+Make wrappers are also available:
+
+```bash
+make ci-list
+make ci-quick
+make ci-professional
+make ci-release
+make ci-enterprise
 make phase-close
 ```
 
-The professional lane is the phase-close gate. New tests, smokes, drift checks, and golden checks should be wired into that lane before a phase is marked complete.
+The professional lane is the phase-close gate. New tests, smokes, drift checks, and golden checks should be wired into the manifest before a phase is marked complete.
 
 ## Workstation verification
 

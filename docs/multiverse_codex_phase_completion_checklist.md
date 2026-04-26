@@ -15,12 +15,19 @@ This is the closure contract for the Multiverse Codex build. A phase is complete
 
 ## Local CI Law
 
-Every phase closure must run through the local CI lane system before it can close.
+Every phase closure must run through the repo-owned master CI runner before it can close.
 
-- [ ] `scripts/local-ci.sh quick` exists and passes for fast patch-loop checks.
-- [ ] `scripts/local-ci.sh professional` exists and passes before any phase is marked complete.
-- [ ] `scripts/local-ci.sh release` exists and passes when preparing a release-grade handoff.
-- [ ] `make ci-quick`, `make ci-professional`, `make ci-release`, and `make phase-close` route to the CI lanes.
+- [ ] `ci/master_ci_runner.yaml` exists and defines `quick`, `professional`, `release`, and `enterprise` lanes.
+- [ ] `scripts/run_ci.py` reads `ci/master_ci_runner.yaml`, supports `--list`, accepts one lane argument, rejects unknown lanes, and runs commands from the repo root.
+- [ ] CI commands run in manifest order, print numbered steps, stream stdout/stderr, stop on first failure, and return the failed command's exit code.
+- [ ] The runner avoids arbitrary command execution from user input; user input may select only a manifest-defined lane.
+- [ ] The runner avoids `shell=True`; manifest commands are tokenized and run directly.
+- [ ] Manifest commands must reflect real repo tooling. Do not invent lint, typecheck, test, e2e, audit, or build commands before those tools exist.
+- [ ] `PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py quick` passes for fast patch-loop checks.
+- [ ] `PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py professional` passes before any phase is marked complete.
+- [ ] `PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py release` passes when preparing a release-grade handoff.
+- [ ] `PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py enterprise` passes for the deepest local verification currently available.
+- [ ] `make ci-list`, `make ci-quick`, `make ci-professional`, `make ci-release`, `make ci-enterprise`, and `make phase-close` route to the master CI runner.
 - [ ] New tests, smokes, drift checks, or golden checks added by a phase are wired into the professional lane before closure.
 - [ ] Golden evidence records the CI lane output used to close the phase.
 - [ ] No `.gitkeep` sentinels are used to preserve directories; use explicit README notes or real tracked files.
@@ -86,7 +93,7 @@ Each phase locks evidence in `docs/goldens/phase-###.md`.
 
 **Scope lock:** Create top-level layout: `multiverse-codex/; app/; docs/; infra/; scripts/; .gitignore; README.md; Makefile`
 
-**Expected artifacts:** `README.md; docs/project/vision.md; docs/project/phase-plan.md; .gitignore; Makefile; app/README.md; infra/README.md; scripts/local-ci.sh; scripts/local_ci.py`
+**Expected artifacts:** `README.md; docs/project/vision.md; docs/project/phase-plan.md; .gitignore; Makefile; app/README.md; infra/README.md; ci/master_ci_runner.yaml; scripts/run_ci.py`
 
 **What must be true to call this phase fully complete:**
 
@@ -99,9 +106,11 @@ Each phase locks evidence in `docs/goldens/phase-###.md`.
 **Tests that validate behavior matches intent:**
 
 - [ ] Source smoke check: `git status; make help`
-- [ ] `scripts/local-ci.sh quick` passes.
-- [ ] `scripts/local-ci.sh professional` passes before closure.
-- [ ] `scripts/local-ci.sh release` passes for release-grade handoff confidence.
+- [ ] `PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py --list` lists all lanes.
+- [ ] `PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py quick` passes.
+- [ ] `PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py professional` passes before closure.
+- [ ] `PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py release` passes for release-grade handoff confidence.
+- [ ] `PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py enterprise` passes for deepest local confidence.
 - [ ] `make phase-close` passes and maps to the professional lane.
 - [ ] Run setup/build/check commands from a clean shell and verify the documented happy path works without hidden local state.
 - [ ] Run `git diff --check` and project lint/typecheck/build commands where applicable.
