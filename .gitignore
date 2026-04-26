@@ -1,5 +1,33 @@
+# Patch artifacts
 *.dev
 *.zip
 *.tar
 *.patch
 *.diff
+
+# Dependencies and package manager output
+node_modules/
+.pnpm-store/
+
+# SvelteKit and Vite output
+.svelte-kit/
+build/
+dist/
+.vite/
+
+# Environment and local secrets
+.env
+.env.*
+!.env.example
+
+# Logs and local runtime output
+*.log
+logs/
+.tmp/
+tmp/
+.DS_Store
+Thumbs.db
+
+# Local media and generated backups
+media/
+backups/
