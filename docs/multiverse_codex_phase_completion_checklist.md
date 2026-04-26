@@ -137,7 +137,7 @@ Each phase locks evidence in `docs/goldens/phase-###.md`.
 
 **Scope lock:** Document: `project name; tone and visual direction; core content types; target audience; public/private split; minimum viable launch target`
 
-**Expected artifacts:** `docs/project/vision.md; docs/project/content-types.md`
+**Expected artifacts:** `docs/project/vision.md; docs/project/content-types.md; scripts/check_phase_identity.py; CI professional lane checks for Phase 2 spec/closure/golden and identity smoke`
 
 **What must be true to call this phase fully complete:**
 
@@ -149,7 +149,9 @@ Each phase locks evidence in `docs/goldens/phase-###.md`.
 
 **Tests that validate behavior matches intent:**
 
-- [ ] Run a targeted smoke test proving the phase intent works from a clean checkout.
+- [ ] Run targeted identity smoke: `PYTHONDONTWRITEBYTECODE=1 python3 scripts/check_phase_identity.py`.
+- [ ] Run the canonical phase-close gate: `PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py professional`.
+- [ ] Run `make phase-close` and confirm it maps to the professional lane.
 - [ ] Run `git diff --check` and project lint/typecheck/build commands where applicable.
 - [ ] Verify failure cases fail cleanly instead of silently succeeding.
 
@@ -157,6 +159,7 @@ Each phase locks evidence in `docs/goldens/phase-###.md`.
 
 - [ ] Create/update `docs/goldens/phase-002.md`.
 - [ ] Record commands run, outputs summarized, files changed, and final commit hash.
+- [ ] Include the identity smoke and professional CI lane output summary.
 - [ ] Golden states any limitations and confirms none violate phase intent.
 
 **Hard no's:**

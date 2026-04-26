@@ -1,16 +1,16 @@
 {
-  "current_phase": 1,
-  "current_phase_title": "Repository Skeleton",
+  "current_phase": 2,
+  "current_phase_title": "Project Vision and Naming Lock",
   "phase_status": "complete",
-  "last_completed_phase": 1,
-  "next_candidate_phase": 2,
-  "last_patch_id": "phase-001-master-ci-runner-redo",
-  "updated_at": "2026-04-26T03:20:00Z",
+  "last_completed_phase": 2,
+  "next_candidate_phase": 3,
+  "last_patch_id": "phase-002-project-vision-lock",
+  "updated_at": "2026-04-26T14:24:23Z",
   "notes": [
-    "Phase 1 local CI was reworked to match the requested repo-owned shape: ci/master_ci_runner.yaml plus scripts/run_ci.py.",
-    "The legacy local-ci.sh/local_ci.py shape is rejected by the professional lane and is not present in the repo.",
-    "CI lanes are quick, professional, release, and enterprise. The professional lane remains the phase-close gate.",
-    "No package.json, lockfile, framework, lint, typecheck, test, e2e, audit, or build tooling exists yet, so the CI manifest does not invent those checks.",
-    "Phase 2 remains the next candidate phase after this CI correction."
+    "Phase 2 locks the project name as Multiverse Codex and records the product promise, tone, audience, public/private split, core content vocabulary, and minimum viable launch target.",
+    "docs/project/content-types.md is now the canonical Phase 2 vocabulary source for worlds, characters, artifacts, factions, stories, chapters, timeline events, media assets, and entity relationships.",
+    "scripts/check_phase_identity.py validates the identity docs and is wired into the professional CI lane.",
+    "The professional lane remains the canonical phase-close gate and now checks Phase 2 spec, closure, golden, content vocabulary, and identity smoke before closure.",
+    "Phase 3 is the next candidate phase: SvelteKit App Scaffold."
   ]
 }

@@ -6,9 +6,9 @@ The finished project will become a public lore site and creator-owned admin tool
 
 ## Current phase state
 
-- Last completed phase: Phase 1, Repository Skeleton
-- Current phase after this patch: Phase 1, Repository Skeleton re-closed under the repo-owned master CI runner
-- Next candidate phase: Phase 2, Project Vision and Naming Lock
+- Last completed phase: Phase 2, Project Vision and Naming Lock
+- Current phase after this patch: Phase 2, identity and content vocabulary locked
+- Next candidate phase: Phase 3, SvelteKit App Scaffold
 
 Machine-readable state lives in `docs/progress.json`.
 Append-only patch history lives in `docs/progress.jsonl`.
@@ -67,7 +67,22 @@ make ci-enterprise
 make phase-close
 ```
 
-The professional lane is the phase-close gate. New tests, smokes, drift checks, and golden checks should be wired into the manifest before a phase is marked complete.
+The professional lane is the phase-close gate. New tests, smokes, drift checks, and golden checks must be wired into the manifest before a phase is marked complete. Phase 2 adds the identity/content vocabulary check through `scripts/check_phase_identity.py`.
+
+## Project identity docs
+
+Phase 2 locks the project identity and content vocabulary:
+
+```txt
+docs/project/vision.md
+docs/project/content-types.md
+```
+
+Run the targeted identity smoke directly with:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 python3 scripts/check_phase_identity.py
+```
 
 ## Workstation verification
 

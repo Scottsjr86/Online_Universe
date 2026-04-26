@@ -22,14 +22,14 @@ docs/multiverse_codex_architecture_laws.md
 
 ## Current status
 
-Phase 0 is complete. Phase 1 creates the repository skeleton and records the first stable project layout.
+Phase 0 and Phase 1 are complete. Phase 2 locks the project identity, public/private product split, content vocabulary, and minimum launch target.
 
 ## Near-term sequence
 
 ```txt
-Phase 1: Repository Skeleton
 Phase 2: Project Vision and Naming Lock
 Phase 3: SvelteKit App Scaffold
+Phase 4: TailwindCSS Setup
 Phase 4: TailwindCSS Setup
 Phase 5: Base Layout Shell
 Phase 6: Static Landing Page
@@ -46,4 +46,5 @@ Every phase must ship with:
 - closure file
 - golden evidence
 - smoke checks
+- professional local CI lane with all new phase tests and golden checks wired before closure
 - `git apply --check` proof for the generated patch
