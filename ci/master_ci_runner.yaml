@@ -49,6 +49,14 @@ lanes:
         run: test -f docs/goldens/phase-002.md
       - name: Check Phase 2 identity lock
         run: python3 -S scripts/check_phase_identity.py
+      - name: Require Phase 3 spec
+        run: test -f docs/specs/phase-003-spec.md
+      - name: Require Phase 3 closure evidence
+        run: test -f docs/closures/phase-003-closure.md
+      - name: Require Phase 3 golden
+        run: test -f docs/goldens/phase-003.md
+      - name: Check Phase 3 SvelteKit scaffold
+        run: python3 -S scripts/check_phase_app_scaffold.py
       - name: Reject app .gitkeep sentinel
         run: test ! -e app/.gitkeep
       - name: Reject infra .gitkeep sentinel

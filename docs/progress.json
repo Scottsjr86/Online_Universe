@@ -1,16 +1,15 @@
 {
-  "current_phase": 2,
-  "current_phase_title": "Project Vision and Naming Lock",
-  "phase_status": "complete",
+  "current_phase": 3,
+  "current_phase_title": "SvelteKit App Scaffold",
+  "phase_status": "in_progress",
   "last_completed_phase": 2,
   "next_candidate_phase": 3,
-  "last_patch_id": "phase-002-project-vision-lock",
-  "updated_at": "2026-04-26T14:24:23Z",
+  "last_patch_id": "phase-003-sveltekit-scaffold-start",
+  "updated_at": "2026-04-26T16:10:00Z",
   "notes": [
-    "Phase 2 locks the project name as Multiverse Codex and records the product promise, tone, audience, public/private split, core content vocabulary, and minimum viable launch target.",
-    "docs/project/content-types.md is now the canonical Phase 2 vocabulary source for worlds, characters, artifacts, factions, stories, chapters, timeline events, media assets, and entity relationships.",
-    "scripts/check_phase_identity.py validates the identity docs and is wired into the professional CI lane.",
-    "The professional lane remains the canonical phase-close gate and now checks Phase 2 spec, closure, golden, content vocabulary, and identity smoke before closure.",
-    "Phase 3 is the next candidate phase: SvelteKit App Scaffold."
+    "Phase 3 has started with a SvelteKit TypeScript scaffold under app/.",
+    "The scaffold shape is checked by scripts/check_phase_app_scaffold.py and wired into the professional CI lane.",
+    "Phase 3 is not closed because app/pnpm-lock.yaml is not committed and pnpm install/check/build/dev smoke evidence is not recorded yet.",
+    "Stay in Phase 3 until dependency install, lockfile generation, typecheck/build, dev-server smoke, professional CI, golden, spec, closure, and apply-check evidence are all complete."
   ]
 }

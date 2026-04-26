@@ -2,7 +2,7 @@ SHELL := /usr/bin/env bash
 PYTHON ?= python3
 CI := PYTHONDONTWRITEBYTECODE=1 $(PYTHON) scripts/run_ci.py
 
-.PHONY: help status verify-workstation phase-docs ci-list ci-quick ci-professional ci-release ci-enterprise phase-close
+.PHONY: help status verify-workstation phase-docs ci-list ci-quick ci-professional ci-release ci-enterprise phase-close app-install app-check app-build app-dev
 
 help:
 	@printf 'Multiverse Codex developer targets\n'
@@ -17,6 +17,10 @@ help:
 	@printf 'ci-release           Run ship-adjacent verification.\n'
 	@printf 'ci-enterprise        Run the deepest local verification lane.\n'
 	@printf 'phase-close          Alias for ci-professional.\n'
+	@printf 'app-install          Install app dependencies with pnpm.\n'
+	@printf 'app-check            Run SvelteKit type checking.\n'
+	@printf 'app-build            Build the SvelteKit app.\n'
+	@printf 'app-dev              Start the SvelteKit dev server.\n'
 
 status:
 	@git status --short
@@ -49,3 +53,15 @@ ci-enterprise:
 	@$(CI) enterprise
 
 phase-close: ci-professional
+
+app-install:
+	@pnpm --dir app install
+
+app-check:
+	@pnpm --dir app check
+
+app-build:
+	@pnpm --dir app build
+
+app-dev:
+	@pnpm --dir app dev

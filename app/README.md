@@ -1,5 +1,25 @@
-# App Root
+# Multiverse Codex App
 
-This directory is reserved for the SvelteKit application that begins in Phase 3.
+This directory now contains the Phase 3 SvelteKit TypeScript scaffold.
 
-Phase 1 tracks this root with a README instead of an empty sentinel so the repository skeleton stays explicit and searchable. Do not add framework files here before the SvelteKit scaffold phase.
+## Package manager
+
+The app is configured for `pnpm` and declares its package manager in `package.json`.
+
+## Expected local commands
+
+Run these from the repo root after applying the Phase 3 scaffold patch:
+
+```bash
+cd app
+pnpm install
+pnpm check
+pnpm build
+pnpm dev
+```
+
+`pnpm install` creates `app/pnpm-lock.yaml`, which is required before Phase 3 can be truthfully closed.
+
+## Scope boundary
+
+This phase creates the default app shell only. TailwindCSS, reusable layout components, and the polished landing page begin in later phases.

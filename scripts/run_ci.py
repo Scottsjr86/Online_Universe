@@ -19,6 +19,7 @@ ALLOWED_EXTERNAL_COMMANDS = {
     "bash",
     "git",
     "make",
+    "pnpm",
     "python3",
     "test",
 }

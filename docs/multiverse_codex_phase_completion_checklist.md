@@ -75,7 +75,7 @@ Each phase locks evidence in `docs/goldens/phase-###.md`.
 
 - [ ] Create/update `docs/goldens/phase-000.md`.
 - [ ] Record commands run, outputs summarized, files changed, and final commit hash.
-- [ ] Include terminal transcript snippets for install, deploy, ops, or environment commands.
+- [ ] Include terminal transcript snippets for `pnpm install`, `pnpm check`, `pnpm build`, `pnpm dev`, and professional CI.
 - [ ] Golden states any limitations and confirms none violate phase intent.
 
 **Hard no's:**
@@ -176,11 +176,14 @@ Each phase locks evidence in `docs/goldens/phase-###.md`.
 
 **Scope lock:** Inside `app/`, scaffold SvelteKit with TypeScript. Add: `SvelteKit; TypeScript; pnpm lockfile; basic dev server`
 
-**Expected artifacts:** `app/package.json; app/src/; app/svelte.config.js; app/vite.config.ts`
+**Expected artifacts:** `app/package.json; app/pnpm-lock.yaml; app/src/; app/svelte.config.js; app/vite.config.ts; app/tsconfig.json`
 
 **What must be true to call this phase fully complete:**
 
 - [ ] The default app runs locally.
+- [ ] `app/package.json` declares SvelteKit, TypeScript, Vite, pnpm, and dev/check/build/preview scripts.
+- [ ] `app/pnpm-lock.yaml` exists after `pnpm install` and is committed before closure.
+- [ ] Professional CI includes and passes `scripts/check_phase_app_scaffold.py` plus all Phase 3 golden/spec evidence checks.
 - [ ] All expected artifacts exist, are committed, and match the phase scope.
 - [ ] Global completion laws are satisfied.
 - [ ] Documentation for this phase is updated.
@@ -189,6 +192,9 @@ Each phase locks evidence in `docs/goldens/phase-###.md`.
 **Tests that validate behavior matches intent:**
 
 - [ ] Source smoke check: `cd app; pnpm install; pnpm dev`
+- [ ] Run `cd app; pnpm check` and `cd app; pnpm build` after dependencies are installed.
+- [ ] Run `PYTHONDONTWRITEBYTECODE=1 python3 scripts/check_phase_app_scaffold.py` from repo root.
+- [ ] Run `PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py professional` before closure.
 - [ ] Run setup/build/check commands from a clean shell and verify the documented happy path works without hidden local state.
 - [ ] Run `git diff --check` and project lint/typecheck/build commands where applicable.
 - [ ] Verify failure cases fail cleanly instead of silently succeeding.
