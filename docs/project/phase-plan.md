@@ -22,13 +22,11 @@ docs/multiverse_codex_architecture_laws.md
 
 ## Current status
 
-Phase 0, Phase 1, and Phase 2 are complete. Phase 3 has started the SvelteKit TypeScript scaffold and remains open until dependency installation, lockfile creation, typecheck/build, and dev-server smoke evidence are recorded.
+Phase 0, Phase 1, Phase 2, and Phase 3 are complete. Phase 4 is next and must stay scoped to TailwindCSS infrastructure.
 
 ## Near-term sequence
 
 ```txt
-Phase 3: SvelteKit App Scaffold
-Phase 3 completion: dependency install, lockfile, typecheck/build, dev-server smoke
 Phase 4: TailwindCSS Setup
 Phase 5: Base Layout Shell
 Phase 6: Static Landing Page

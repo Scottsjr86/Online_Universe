@@ -12,6 +12,7 @@ APP = ROOT / "app"
 
 REQUIRED_FILES = [
     APP / "package.json",
+    APP / "pnpm-lock.yaml",
     APP / "svelte.config.js",
     APP / "vite.config.ts",
     APP / "tsconfig.json",

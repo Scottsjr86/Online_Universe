@@ -221,7 +221,6 @@ def run_lane(lane_name: str, lanes: dict[str, Lane], root: Path) -> int:
             returncode = completed.returncode
         else:
             returncode = internal_returncode
-        print(f"[ok] step {index} completed", flush=True)
         if returncode != 0:
             print(
                 f"[FAIL] step {index} failed with exit code {returncode}: {command.name}",
@@ -229,6 +228,7 @@ def run_lane(lane_name: str, lanes: dict[str, Lane], root: Path) -> int:
                 flush=True,
             )
             return returncode
+        print(f"[ok] step {index} completed", flush=True)
     print(f"[PASS] {lane_name} lane passed", flush=True)
     return 0
 

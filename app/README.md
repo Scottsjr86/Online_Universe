@@ -8,7 +8,7 @@ The app is configured for `pnpm` and declares its package manager in `package.js
 
 ## Expected local commands
 
-Run these from the repo root after applying the Phase 3 scaffold patch:
+Run these from the repo root when app scaffold drift is suspected:
 
 ```bash
 cd app
@@ -18,7 +18,7 @@ pnpm build
 pnpm dev
 ```
 
-`pnpm install` creates `app/pnpm-lock.yaml`, which is required before Phase 3 can be truthfully closed.
+`app/pnpm-lock.yaml` is committed and required before Phase 3 can remain closed.
 
 ## Scope boundary
 

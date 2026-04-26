@@ -55,6 +55,8 @@ lanes:
         run: test -f docs/closures/phase-003-closure.md
       - name: Require Phase 3 golden
         run: test -f docs/goldens/phase-003.md
+      - name: Require Phase 3 pnpm lockfile
+        run: test -f app/pnpm-lock.yaml
       - name: Check Phase 3 SvelteKit scaffold
         run: python3 -S scripts/check_phase_app_scaffold.py
       - name: Reject app .gitkeep sentinel
@@ -84,7 +86,7 @@ lanes:
         run: git status --short
 
   enterprise:
-    description: Deepest local verification currently available before app scaffolding exists.
+    description: Deepest local verification currently available for the repo skeleton and app scaffold.
     extends: release
     commands:
       - name: Require workstation docs

@@ -1,15 +1,15 @@
 {
-  "current_phase": 3,
-  "current_phase_title": "SvelteKit App Scaffold",
-  "phase_status": "in_progress",
-  "last_completed_phase": 2,
-  "next_candidate_phase": 3,
-  "last_patch_id": "phase-003-sveltekit-scaffold-start",
-  "updated_at": "2026-04-26T16:10:00Z",
+  "current_phase": 4,
+  "current_phase_title": "TailwindCSS Setup",
+  "phase_status": "ready",
+  "last_completed_phase": 3,
+  "next_candidate_phase": 4,
+  "last_patch_id": "phase-003-close-sveltekit-scaffold",
+  "updated_at": "2026-04-26T16:45:00Z",
   "notes": [
-    "Phase 3 has started with a SvelteKit TypeScript scaffold under app/.",
-    "The scaffold shape is checked by scripts/check_phase_app_scaffold.py and wired into the professional CI lane.",
-    "Phase 3 is not closed because app/pnpm-lock.yaml is not committed and pnpm install/check/build/dev smoke evidence is not recorded yet.",
-    "Stay in Phase 3 until dependency install, lockfile generation, typecheck/build, dev-server smoke, professional CI, golden, spec, closure, and apply-check evidence are all complete."
+    "Phase 3 is complete: the SvelteKit TypeScript scaffold exists under app/ with package.json, pnpm lockfile, config files, source shell, and default route.",
+    "The owner verified on the primary workstation that Vite booted and reported ready, and that CI lanes pass cleanly.",
+    "The professional lane is the canonical phase-close gate and now requires the Phase 3 pnpm lockfile plus scaffold validator before closure.",
+    "Phase 4 is next: TailwindCSS setup only. Do not start layout shell or landing page polish until Tailwind infrastructure is locked."
   ]
 }

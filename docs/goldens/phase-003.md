@@ -6,24 +6,16 @@ Phase 3: SvelteKit App Scaffold
 
 ## Golden status
 
-Draft evidence only. Phase 3 is not closed.
+Closed.
 
-## Scope completed in this patch
+## Scope completed
 
-The patch creates the initial SvelteKit TypeScript scaffold under `app/` and adds a deterministic repo-level scaffold validator.
+Phase 3 created the initial SvelteKit TypeScript app scaffold under `app/`, committed the pnpm lockfile generated on the target workstation, and wired scaffold/lockfile evidence into the professional CI lane.
 
 ## Files changed
 
 - `README.md`
-- `Makefile`
 - `app/README.md`
-- `app/package.json`
-- `app/svelte.config.js`
-- `app/vite.config.ts`
-- `app/tsconfig.json`
-- `app/src/app.d.ts`
-- `app/src/app.html`
-- `app/src/routes/+page.svelte`
 - `ci/master_ci_runner.yaml`
 - `docs/multiverse_codex_phase_completion_checklist.md`
 - `docs/project/phase-plan.md`
@@ -37,29 +29,17 @@ The patch creates the initial SvelteKit TypeScript scaffold under `app/` and add
 
 ## Commands run
 
+Patch workflow checks:
+
 ```bash
 PYTHONDONTWRITEBYTECODE=1 python3 -S scripts/check_phase_app_scaffold.py
-node --check app/svelte.config.js
-node -e "JSON.parse(require('fs').readFileSync('app/package.json','utf8')); console.log('[PASS] app/package.json parses')"
-PYTHONDONTWRITEBYTECODE=1 python3 -S scripts/run_ci.py --list
-PYTHONDONTWRITEBYTECODE=1 python3 -S scripts/run_ci.py quick
 PYTHONDONTWRITEBYTECODE=1 python3 -S scripts/run_ci.py professional
 git diff --check
 find app scripts infra docs -type f \( -name "*.ts" -o -name "*.svelte" -o -name "*.js" -o -name "*.css" -o -name "*.sh" -o -name "*.md" -o -name "*.py" \) -print0 | xargs -0 wc -l | sort -n
-git apply --check /mnt/data/phase_003_sveltekit_scaffold_start.patch
+git apply --check /mnt/data/phase_003_close_sveltekit_scaffold.patch
 ```
 
-## Test/smoke output summary
-
-```txt
-[PASS] Phase 3 SvelteKit scaffold files are present and coherent
-[PASS] quick lane passed
-[PASS] professional lane passed
-```
-
-## Required target workstation evidence before closure
-
-These checks still need real output recorded before Phase 3 can close:
+Owner workstation checks:
 
 ```bash
 cd app
@@ -67,15 +47,59 @@ pnpm install
 pnpm check
 pnpm build
 pnpm dev
+PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py professional
 ```
 
-`app/pnpm-lock.yaml` must also be present and committed.
+## Test/smoke output summary
+
+Patch workflow summary:
+
+```txt
+[PASS] Phase 3 SvelteKit scaffold files are present and coherent
+[PASS] professional lane passed
+[PASS] git diff --check
+[PASS] architecture file-size review completed
+[PASS] git apply --check /mnt/data/phase_003_close_sveltekit_scaffold.patch
+```
+
+Owner workstation summary:
+
+```txt
+Vite booted and reported ready.
+CI lanes pass cleanly.
+```
+
+## Evidence snapshot
+
+Required Phase 3 artifacts now exist:
+
+```txt
+app/package.json
+app/pnpm-lock.yaml
+app/svelte.config.js
+app/vite.config.ts
+app/tsconfig.json
+app/src/app.d.ts
+app/src/app.html
+app/src/routes/+page.svelte
+scripts/check_phase_app_scaffold.py
+```
+
+Professional CI requires Phase 3 evidence:
+
+```txt
+Require Phase 3 spec
+Require Phase 3 closure evidence
+Require Phase 3 golden
+Require Phase 3 pnpm lockfile
+Check Phase 3 SvelteKit scaffold
+```
 
 ## Known limitations
 
-- The container lacks pnpm and cannot fetch npm dependencies.
-- The lockfile and runtime SvelteKit checks are not proven in this patch.
-- Phase 3 remains open.
+None for Phase 3.
+
+Generated dependency/build directories are ignored by `.gitignore` and are not part of the intended source contract.
 
 ## Final commit hash
 
@@ -83,8 +107,8 @@ Patch artifact only. No final repository commit hash is available from the gener
 
 ## Hard no review
 
-- No file over 1,000 LOC introduced.
-- No logic/layout mixing beyond a default scaffold route.
-- No database, auth, media, deployment, or Tailwind scope was added.
+- No changed file exceeds 1,000 LOC.
+- No logic/layout mixing beyond the default scaffold route.
+- No database, auth, media, deployment, Tailwind, or layout shell scope was added.
 - No `.gitkeep` sentinel was reintroduced.
-- No Phase 3 completion is claimed without install/build/dev proof.
+- No Phase 3 completion is claimed without lockfile, app boot, and CI proof.

@@ -183,7 +183,7 @@ Each phase locks evidence in `docs/goldens/phase-###.md`.
 - [ ] The default app runs locally.
 - [ ] `app/package.json` declares SvelteKit, TypeScript, Vite, pnpm, and dev/check/build/preview scripts.
 - [ ] `app/pnpm-lock.yaml` exists after `pnpm install` and is committed before closure.
-- [ ] Professional CI includes and passes `scripts/check_phase_app_scaffold.py` plus all Phase 3 golden/spec evidence checks.
+- [ ] Professional CI includes and passes `scripts/check_phase_app_scaffold.py`, the committed `app/pnpm-lock.yaml` requirement, and all Phase 3 golden/spec evidence checks.
 - [ ] All expected artifacts exist, are committed, and match the phase scope.
 - [ ] Global completion laws are satisfied.
 - [ ] Documentation for this phase is updated.
