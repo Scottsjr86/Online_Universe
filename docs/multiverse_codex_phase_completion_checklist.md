@@ -265,12 +265,16 @@ Each phase locks evidence in `docs/goldens/phase-###.md`.
 
 **Scope lock:** Build: `root layout; main navigation; footer; responsive container; dark futuristic baseline theme` Do not build content pages yet.
 
-**Expected artifacts:** `app/src/routes/+layout.svelte; app/src/lib/components/site/SiteShell.svelte; app/src/lib/components/site/SiteNav.svelte; app/src/lib/components/site/SiteFooter.svelte`
+**Expected artifacts:** `app/src/routes/+layout.svelte; app/src/lib/components/site/SiteShell.svelte; app/src/lib/components/site/SiteNav.svelte; app/src/lib/components/site/SiteFooter.svelte; scripts/check_phase_site_shell.py`
 
 **What must be true to call this phase fully complete:**
 
 - [ ] The site has a clean reusable shell.
+- [ ] The root layout composes `SiteShell` and does not own page content.
+- [ ] The page route does not create a competing `main` landmark after the shell owns it.
+- [ ] Navigation exists and does not link to unbuilt routes.
 - [ ] All expected artifacts exist, are committed, and match the phase scope.
+- [ ] The Phase 5 source-shape check is wired into the professional CI lane.
 - [ ] Global completion laws are satisfied.
 - [ ] Documentation for this phase is updated.
 - [ ] Prior locked behavior still passes.
@@ -278,7 +282,11 @@ Each phase locks evidence in `docs/goldens/phase-###.md`.
 **Tests that validate behavior matches intent:**
 
 - [ ] Source smoke check: Visit: `/` Confirm layout renders at desktop and mobile widths.
-- [ ] Run setup/build/check commands from a clean shell and verify the documented happy path works without hidden local state.
+- [ ] Run `PYTHONDONTWRITEBYTECODE=1 python3 scripts/check_phase_site_shell.py`.
+- [ ] Run `pnpm check` from `app/`.
+- [ ] Run `pnpm build` from `app/`.
+- [ ] Run `pnpm dev` from `app/` and confirm Vite readiness.
+- [ ] Run `PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py professional` before closure.
 - [ ] Run `git diff --check` and project lint/typecheck/build commands where applicable.
 - [ ] Verify failure cases fail cleanly instead of silently succeeding.
 
@@ -286,7 +294,7 @@ Each phase locks evidence in `docs/goldens/phase-###.md`.
 
 - [ ] Create/update `docs/goldens/phase-005.md`.
 - [ ] Record commands run, outputs summarized, files changed, and final commit hash.
-- [ ] Include terminal transcript snippets for install, deploy, ops, or environment commands.
+- [ ] Include terminal transcript snippets for `pnpm check`, `pnpm build`, `pnpm dev`, browser route smoke, and professional CI.
 - [ ] Golden states any limitations and confirms none violate phase intent.
 
 **Hard no's:**
@@ -296,6 +304,8 @@ Each phase locks evidence in `docs/goldens/phase-###.md`.
 - [ ] No deferred work ever: no TODO/FIXME/stub/placeholder/mocked-success may count as completion.
 - [ ] No unrelated objectives, surprise refactors, or scope braid.
 - [ ] No secrets, private keys, real credentials, production media, or accidental local files committed.
+- [ ] No links to unbuilt content/admin routes.
+- [ ] No Phase 6 landing-page sections in Phase 5.
 
 ### Phase 6: Static Landing Page
 

@@ -1,15 +1,15 @@
 {
-  "current_phase": 4,
-  "current_phase_title": "TailwindCSS Setup",
-  "phase_status": "complete",
+  "current_phase": 5,
+  "current_phase_title": "Base Layout Shell",
+  "phase_status": "in_progress",
   "last_completed_phase": 4,
   "next_candidate_phase": 5,
-  "last_patch_id": "phase-004-close-tailwind-setup",
-  "updated_at": "2026-04-27T19:05:07Z",
+  "last_patch_id": "phase-005-site-shell-start",
+  "updated_at": "2026-04-27T20:18:00Z",
   "notes": [
     "Phase 0 through Phase 4 are complete.",
-    "Phase 4 closed after the authoritative base included TailwindCSS source artifacts, refreshed app/pnpm-lock.yaml, owner-run pnpm install/check/build/dev proof, and clean professional CI proof.",
-    "The professional CI lane remains the canonical phase-close gate and now uses scripts/check_phase_tailwind_setup.py to verify Tailwind source artifacts and lockfile drift.",
-    "Phase 5 is the next candidate phase: Base Layout Shell."
+    "Phase 5 has started with the reusable public site shell: root layout, navigation, responsive main container, footer, skip link, and dark baseline theme.",
+    "The professional CI lane now runs scripts/check_phase_site_shell.py and requires Phase 5 shell evidence artifacts.",
+    "Phase 5 remains open until the owner workstation proves pnpm check, pnpm build, Vite dev readiness, desktop/mobile route smoke for /, and professional CI."
   ]
 }

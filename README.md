@@ -7,8 +7,8 @@ The finished project will become a public lore site and creator-owned admin tool
 ## Current phase state
 
 - Last completed phase: Phase 4, TailwindCSS Setup
-- Current phase after this patch: Phase 4, TailwindCSS Setup complete
-- Next candidate phase: Phase 5, Base Layout Shell
+- Current phase after this patch: Phase 5, Base Layout Shell in progress
+- Next candidate phase: Phase 5, Base Layout Shell closure
 
 Machine-readable state lives in `docs/progress.json`.
 Append-only patch history lives in `docs/progress.jsonl`.
@@ -67,7 +67,7 @@ make ci-enterprise
 make phase-close
 ```
 
-The professional lane is the phase-close gate. New tests, smokes, drift checks, and golden checks must be wired into the manifest before a phase is marked complete. Phase 2 adds the identity/content vocabulary check through `scripts/check_phase_identity.py`. Phase 3 adds the scaffold shape and pnpm lockfile check through `scripts/check_phase_app_scaffold.py`. Phase 4 adds the Tailwind setup and lockfile drift check through `scripts/check_phase_tailwind_setup.py`.
+The professional lane is the phase-close gate. New tests, smokes, drift checks, and golden checks must be wired into the manifest before a phase is marked complete. Phase 2 adds the identity/content vocabulary check through `scripts/check_phase_identity.py`. Phase 3 adds the scaffold shape and pnpm lockfile check through `scripts/check_phase_app_scaffold.py`. Phase 4 adds the Tailwind setup and lockfile drift check through `scripts/check_phase_tailwind_setup.py`. Phase 5 adds the site shell shape check through `scripts/check_phase_site_shell.py`.
 
 ## Project identity docs
 
@@ -136,6 +136,40 @@ Phase 4 closure proof was captured with the workstation app path:
 ```bash
 cd app
 pnpm install
+pnpm check
+pnpm build
+pnpm dev
+```
+
+Then run the canonical close gate from the repo root:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py professional
+```
+
+
+## Phase 5 base layout shell
+
+The public site shell is split into layout-owned components:
+
+```txt
+app/src/routes/+layout.svelte
+app/src/lib/components/site/SiteShell.svelte
+app/src/lib/components/site/SiteNav.svelte
+app/src/lib/components/site/SiteFooter.svelte
+scripts/check_phase_site_shell.py
+```
+
+Run the Phase 5 source-shape check from the repo root:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 python3 scripts/check_phase_site_shell.py
+```
+
+Before Phase 5 can close, also prove the app shell on the owner workstation:
+
+```bash
+cd app
 pnpm check
 pnpm build
 pnpm dev

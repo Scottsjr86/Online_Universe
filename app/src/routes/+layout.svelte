@@ -1,3 +1,8 @@
-import '../app.css';
+<script>
+  import SiteShell from '$lib/components/site/SiteShell.svelte';
+  import '../app.css';
+</script>
 
-<slot />
+<SiteShell>
+  <slot />
+</SiteShell>

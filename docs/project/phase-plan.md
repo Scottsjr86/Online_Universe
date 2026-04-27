@@ -22,12 +22,12 @@ docs/multiverse_codex_architecture_laws.md
 
 ## Current status
 
-Phase 0, Phase 1, Phase 2, Phase 3, and Phase 4 are complete. Phase 5 is next and must stay scoped to the reusable public site shell.
+Phase 0, Phase 1, Phase 2, Phase 3, and Phase 4 are complete. Phase 5 is in progress and must stay scoped to the reusable public site shell until runtime/browser proof closes it.
 
 ## Near-term sequence
 
 ```txt
-Phase 5: Base Layout Shell
+Phase 5: Base Layout Shell (in progress)
 Phase 6: Static Landing Page
 Phase 7: Local Native PostgreSQL Foundation
 ```
