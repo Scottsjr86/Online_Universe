@@ -1,15 +1,15 @@
 {
-  "current_phase": 5,
-  "current_phase_title": "Base Layout Shell",
-  "phase_status": "in_progress",
-  "last_completed_phase": 4,
-  "next_candidate_phase": 5,
-  "last_patch_id": "phase-005-site-shell-start",
-  "updated_at": "2026-04-27T20:18:00Z",
+  "current_phase": 6,
+  "current_phase_title": "Static Landing Page",
+  "phase_status": "ready",
+  "last_completed_phase": 5,
+  "next_candidate_phase": 6,
+  "last_patch_id": "phase-005-close-site-shell",
+  "updated_at": "2026-04-27T19:33:18Z",
   "notes": [
-    "Phase 0 through Phase 4 are complete.",
-    "Phase 5 has started with the reusable public site shell: root layout, navigation, responsive main container, footer, skip link, and dark baseline theme.",
-    "The professional CI lane now runs scripts/check_phase_site_shell.py and requires Phase 5 shell evidence artifacts.",
-    "Phase 5 remains open until the owner workstation proves pnpm check, pnpm build, Vite dev readiness, desktop/mobile route smoke for /, and professional CI."
+    "Phase 0 through Phase 5 are complete.",
+    "Phase 5 closed after the reusable public shell landed and owner workstation proof was reported green for pnpm check, pnpm build, pnpm dev readiness, desktop/mobile route smoke for /, and professional CI.",
+    "The professional CI lane validates the Phase 5 shell shape and Phase 5 closure drift check before the phase remains closed.",
+    "Phase 6 is next and must stay scoped to the static landing page sections only."
   ]
 }

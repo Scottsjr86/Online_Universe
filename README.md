@@ -6,9 +6,9 @@ The finished project will become a public lore site and creator-owned admin tool
 
 ## Current phase state
 
-- Last completed phase: Phase 4, TailwindCSS Setup
-- Current phase after this patch: Phase 5, Base Layout Shell in progress
-- Next candidate phase: Phase 5, Base Layout Shell closure
+- Last completed phase: Phase 5, Base Layout Shell
+- Current phase after this patch: Phase 6, Static Landing Page ready
+- Next candidate phase: Phase 6, Static Landing Page
 
 Machine-readable state lives in `docs/progress.json`.
 Append-only patch history lives in `docs/progress.jsonl`.
@@ -67,7 +67,7 @@ make ci-enterprise
 make phase-close
 ```
 
-The professional lane is the phase-close gate. New tests, smokes, drift checks, and golden checks must be wired into the manifest before a phase is marked complete. Phase 2 adds the identity/content vocabulary check through `scripts/check_phase_identity.py`. Phase 3 adds the scaffold shape and pnpm lockfile check through `scripts/check_phase_app_scaffold.py`. Phase 4 adds the Tailwind setup and lockfile drift check through `scripts/check_phase_tailwind_setup.py`. Phase 5 adds the site shell shape check through `scripts/check_phase_site_shell.py`.
+The professional lane is the phase-close gate. New tests, smokes, drift checks, and golden checks must be wired into the manifest before a phase is marked complete. Phase 2 adds the identity/content vocabulary check through `scripts/check_phase_identity.py`. Phase 3 adds the scaffold shape and pnpm lockfile check through `scripts/check_phase_app_scaffold.py`. Phase 4 adds the Tailwind setup and lockfile drift check through `scripts/check_phase_tailwind_setup.py`. Phase 5 adds the site shell shape and closure drift check through `scripts/check_phase_site_shell.py`.
 
 ## Project identity docs
 
@@ -166,7 +166,7 @@ Run the Phase 5 source-shape check from the repo root:
 PYTHONDONTWRITEBYTECODE=1 python3 scripts/check_phase_site_shell.py
 ```
 
-Before Phase 5 can close, also prove the app shell on the owner workstation:
+Phase 5 closure proof was captured with the workstation app path:
 
 ```bash
 cd app
@@ -175,8 +175,10 @@ pnpm build
 pnpm dev
 ```
 
-Then run the canonical close gate from the repo root:
+Then the canonical close gate passed from the repo root:
 
 ```bash
 PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py professional
 ```
+
+Phase 6 is the next phase and may replace the placeholder homepage content with the static landing sections defined by the checklist.

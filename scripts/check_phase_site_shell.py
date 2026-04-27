@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
@@ -14,6 +15,9 @@ REQUIRED_FILES = [
     'app/src/lib/components/site/SiteShell.svelte',
     'app/src/lib/components/site/SiteNav.svelte',
     'app/src/lib/components/site/SiteFooter.svelte',
+    'docs/specs/phase-005-spec.md',
+    'docs/closures/phase-005-closure.md',
+    'docs/goldens/phase-005.md',
 ]
 
 FORBIDDEN_ROUTE_LINKS = [
@@ -41,6 +45,46 @@ def require_contains(path: str, needles: list[str]) -> int | None:
             return fail(f'{path} missing {needle!r}')
     return None
 
+
+
+def require_phase_closed() -> int | None:
+    progress = json.loads(read('docs/progress.json'))
+    expected = {
+        'last_completed_phase': 5,
+        'next_candidate_phase': 6,
+        'last_patch_id': 'phase-005-close-site-shell',
+    }
+    for key, value in expected.items():
+        if progress.get(key) != value:
+            return fail(f'docs/progress.json expected {key}={value!r}, got {progress.get(key)!r}')
+    if progress.get('phase_status') not in {'ready', 'complete'}:
+        return fail('docs/progress.json must mark the next phase ready after Phase 5 closes')
+
+    closure = read('docs/closures/phase-005-closure.md')
+    spec = read('docs/specs/phase-005-spec.md')
+    golden = read('docs/goldens/phase-005.md')
+    for path, content in [
+        ('docs/closures/phase-005-closure.md', closure),
+        ('docs/specs/phase-005-spec.md', spec),
+        ('docs/goldens/phase-005.md', golden),
+    ]:
+        if 'Complete.' not in content:
+            return fail(f'{path} must record complete status after Phase 5 closes')
+        for forbidden in ['In progress.', 'Open.', 'Phase 5 is not closed yet']:
+            if forbidden in content:
+                return fail(f'{path} still contains open-phase marker {forbidden!r}')
+
+    required_evidence = [
+        'pnpm check',
+        'pnpm build',
+        'pnpm dev',
+        'desktop/mobile `/` smoke',
+        'professional CI',
+    ]
+    for needle in required_evidence:
+        if needle not in closure and needle not in golden:
+            return fail(f'Phase 5 closure/golden missing evidence marker {needle!r}')
+    return None
 
 def main() -> int:
     missing = [path for path in REQUIRED_FILES if not (ROOT / path).is_file()]
@@ -106,6 +150,10 @@ def main() -> int:
     for needle in ['Phase 5 public shell online', 'Real landing content waits for Phase 6']:
         if needle not in page:
             return fail(f'+page.svelte missing shell placeholder proof {needle!r}')
+
+    closed_result = require_phase_closed()
+    if closed_result is not None:
+        return closed_result
 
     print('[PASS] Phase 5 site shell artifacts verified')
     return 0
