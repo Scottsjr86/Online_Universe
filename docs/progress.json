@@ -1,15 +1,15 @@
 {
   "current_phase": 4,
   "current_phase_title": "TailwindCSS Setup",
-  "phase_status": "in_progress",
-  "last_completed_phase": 3,
-  "next_candidate_phase": 4,
-  "last_patch_id": "phase-004-tailwind-setup-repair",
-  "updated_at": "2026-04-26T18:05:00Z",
+  "phase_status": "complete",
+  "last_completed_phase": 4,
+  "next_candidate_phase": 5,
+  "last_patch_id": "phase-004-close-tailwind-setup",
+  "updated_at": "2026-04-27T19:05:07Z",
   "notes": [
-    "Phase 0 through Phase 3 are complete.",
-    "The authoritative Phase 4 base did not contain the earlier Tailwind setup artifacts, so this patch restores the Phase 4 infrastructure slice rather than closing the phase.",
-    "TailwindCSS, PostCSS, global CSS, root layout import, theme docs, and the Phase 4 CI validator are now present.",
-    "Phase 4 remains open until the workstation refreshes app/pnpm-lock.yaml and records pnpm install/check/build/dev plus professional CI proof."
+    "Phase 0 through Phase 4 are complete.",
+    "Phase 4 closed after the authoritative base included TailwindCSS source artifacts, refreshed app/pnpm-lock.yaml, owner-run pnpm install/check/build/dev proof, and clean professional CI proof.",
+    "The professional CI lane remains the canonical phase-close gate and now uses scripts/check_phase_tailwind_setup.py to verify Tailwind source artifacts and lockfile drift.",
+    "Phase 5 is the next candidate phase: Base Layout Shell."
   ]
 }

@@ -6,9 +6,9 @@ The finished project will become a public lore site and creator-owned admin tool
 
 ## Current phase state
 
-- Last completed phase: Phase 3, SvelteKit App Scaffold
-- Current phase after this patch: Phase 4, TailwindCSS Setup in progress
-- Next candidate phase: Phase 4, TailwindCSS Setup closure
+- Last completed phase: Phase 4, TailwindCSS Setup
+- Current phase after this patch: Phase 4, TailwindCSS Setup complete
+- Next candidate phase: Phase 5, Base Layout Shell
 
 Machine-readable state lives in `docs/progress.json`.
 Append-only patch history lives in `docs/progress.jsonl`.
@@ -67,7 +67,7 @@ make ci-enterprise
 make phase-close
 ```
 
-The professional lane is the phase-close gate. New tests, smokes, drift checks, and golden checks must be wired into the manifest before a phase is marked complete. Phase 2 adds the identity/content vocabulary check through `scripts/check_phase_identity.py`. Phase 3 adds the scaffold shape and pnpm lockfile check through `scripts/check_phase_app_scaffold.py`. Phase 4 adds the Tailwind setup shape check through `scripts/check_phase_tailwind_setup.py`.
+The professional lane is the phase-close gate. New tests, smokes, drift checks, and golden checks must be wired into the manifest before a phase is marked complete. Phase 2 adds the identity/content vocabulary check through `scripts/check_phase_identity.py`. Phase 3 adds the scaffold shape and pnpm lockfile check through `scripts/check_phase_app_scaffold.py`. Phase 4 adds the Tailwind setup and lockfile drift check through `scripts/check_phase_tailwind_setup.py`.
 
 ## Project identity docs
 
@@ -131,7 +131,7 @@ Run the Phase 4 shape check from the repo root:
 PYTHONDONTWRITEBYTECODE=1 python3 scripts/check_phase_tailwind_setup.py
 ```
 
-Before Phase 4 closes, refresh dependencies and prove the app path on the workstation:
+Phase 4 closure proof was captured with the workstation app path:
 
 ```bash
 cd app

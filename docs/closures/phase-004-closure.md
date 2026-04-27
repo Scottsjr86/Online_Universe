@@ -6,43 +6,51 @@ Phase 4: TailwindCSS Setup
 
 ## Closure status
 
-Phase 4 is open. This file records the current truth for the in-progress Tailwind setup
-slice and must be updated before Phase 4 can be closed.
+Phase 4 is complete. TailwindCSS, PostCSS, global CSS, base theme tokens, source proof, lockfile proof, app checks, Vite readiness, and professional CI proof are all recorded.
 
-## Scope completed in this slice
+## Scope completed
 
-- TailwindCSS, PostCSS, and Tailwind Vite plugin dependencies were declared.
-- Tailwind was wired into the SvelteKit Vite config.
-- A global CSS entry was added and imported by the root layout.
-- Initial Codex theme tokens were documented and added to `app/src/app.css`.
-- The existing scaffold page was converted from component-local CSS to Tailwind utilities.
-- A Phase 4 validator was added and wired into the professional CI lane.
+- TailwindCSS, PostCSS, and Tailwind Vite plugin dependencies are declared in `app/package.json`.
+- The refreshed `app/pnpm-lock.yaml` records the Tailwind/PostCSS dependencies.
+- Tailwind is wired into the SvelteKit Vite config through `@tailwindcss/vite`.
+- A global CSS entry exists at `app/src/app.css` and is imported from `app/src/routes/+layout.svelte`.
+- Initial Codex theme tokens are defined in CSS and documented in `docs/design/theme.md`.
+- The scaffold page renders Tailwind utility classes instead of component-local CSS.
+- `scripts/check_phase_tailwind_setup.py` validates Phase 4 source artifacts and lockfile drift.
+- The professional CI lane runs the Phase 4 validator before phase closure remains valid.
 
 ## Checklist status
 
-Complete in this slice:
+Complete:
 
-- Expected source artifacts exist.
-- Tailwind utility usage is present on the scaffold route.
-- Theme docs exist.
-- Professional CI includes the Phase 4 validator.
-
-Required before closure:
-
-- Refresh `app/pnpm-lock.yaml` on the workstation with the new dependencies.
-- Run `pnpm check` from `app/`.
-- Run `pnpm build` from `app/`.
-- Start `pnpm dev` and confirm Vite readiness.
-- Run `PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py professional` from repo root.
-- Update this closure and `docs/goldens/phase-004.md` with that proof.
+- The app can render custom styled pages using Tailwind.
+- TailwindCSS, `@tailwindcss/vite`, and PostCSS are declared and reflected in the lockfile.
+- `app/src/app.css` is imported by the root layout and defines base theme tokens.
+- The Phase 4 validator is wired into the professional CI lane.
+- All expected Phase 4 artifacts exist.
+- Documentation, spec, closure, golden, progress state, and progress log are updated.
+- Prior locked behavior remains covered by the professional CI lane.
 
 ## Behavior proven
 
-Repository-level shape proof is present through `scripts/check_phase_tailwind_setup.py`.
-Runtime Tailwind rendering is not closed until workstation app checks and Vite readiness are
-recorded after dependency installation.
+- The authoritative base includes the refreshed `app/pnpm-lock.yaml`.
+- The owner confirmed the workstation path was green for dependency install, Svelte check, SvelteKit build, Vite dev readiness, and professional CI.
+- The patch environment verified the Tailwind shape and lockfile drift checks through `scripts/check_phase_tailwind_setup.py`.
 
-## Commands/tests run in this patch workflow
+## Commands/tests run
+
+Owner workstation proof:
+
+```bash
+cd app
+pnpm install
+pnpm check
+pnpm build
+pnpm dev
+PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py professional
+```
+
+Patch environment proof:
 
 ```bash
 PYTHONDONTWRITEBYTECODE=1 python3 -S scripts/check_phase_tailwind_setup.py
@@ -51,48 +59,36 @@ PYTHONDONTWRITEBYTECODE=1 python3 -S scripts/run_ci.py professional
 PYTHONDONTWRITEBYTECODE=1 python3 -S scripts/run_ci.py release
 PYTHONDONTWRITEBYTECODE=1 python3 -S scripts/run_ci.py enterprise
 node --check app/svelte.config.js
-python3 -m json.tool app/package.json
+python3 -S -m json.tool app/package.json
 git diff --check
 find app scripts infra docs -type f \( -name "*.ts" -o -name "*.svelte" -o -name "*.js" -o -name "*.css" -o -name "*.sh" -o -name "*.md" -o -name "*.py" \) -not -path "app/node_modules/*" -not -path "app/.svelte-kit/*" -print0 | xargs -0 wc -l | sort -n
-git apply --check /mnt/data/phase_004_tailwind_setup_repair.patch
+git apply --check /mnt/data/phase_004_close_tailwind_setup.patch
 ```
 
 ## Files changed
 
 - `README.md`
-- `Makefile`
-- `app/package.json`
-- `app/postcss.config.js`
-- `app/tailwind.config.js`
-- `app/vite.config.ts`
-- `app/src/app.css`
-- `app/src/routes/+layout.svelte`
-- `app/src/routes/+page.svelte`
-- `ci/master_ci_runner.yaml`
-- `docs/design/theme.md`
-- `docs/multiverse_codex_phase_completion_checklist.md`
 - `docs/project/phase-plan.md`
 - `docs/progress.json`
 - `docs/progress.jsonl`
 - `docs/specs/phase-004-spec.md`
 - `docs/closures/phase-004-closure.md`
 - `docs/goldens/phase-004.md`
+- `docs/multiverse_codex_phase_completion_checklist.md`
 - `scripts/check_phase_tailwind_setup.py`
 
 ## Known limitations
 
-Phase 4 is not closed in this patch because the authoritative base did not contain the
-Tailwind setup artifacts, refreshed pnpm lockfile, or workstation runtime evidence.
+None for Phase 4. Layout shell work, navigation, footer, and responsive site frame are Phase 5 scope and are not required for TailwindCSS setup closure.
 
 ## Architecture laws checked
 
-- New implementation files stay under 1,000 LOC. The canonical phase plan and checklist remain pre-existing oversized control documents; this patch adds scoped Phase 4 updates and records the exception while Phase 4 remains open.
+- New implementation files stay under 1,000 LOC.
 - Styling infrastructure stayed out of domain logic.
 - No database, auth, media, route action, or persistence work was added.
-- Layout-shell components, navigation, and footer remain outside this phase.
-- Generated dependency/build directories are ignored and excluded from the file-size review.
+- Layout-shell components, navigation, and footer were not started.
+- Ignored local dependency/build artifacts are not part of the generated patch.
 
 ## Deferred work confirmation
 
-No Phase 4 closure is claimed in this patch. Required closure proof is listed above because
-it remains part of Phase 4, not a later phase.
+No Phase 4 work is deferred. Phase 5 remains outside this phase by design.

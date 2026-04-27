@@ -22,14 +22,14 @@ docs/multiverse_codex_architecture_laws.md
 
 ## Current status
 
-Phase 0, Phase 1, Phase 2, and Phase 3 are complete. Phase 4 is in progress and must stay scoped to TailwindCSS infrastructure until the Tailwind runtime proof is locked.
+Phase 0, Phase 1, Phase 2, Phase 3, and Phase 4 are complete. Phase 5 is next and must stay scoped to the reusable public site shell.
 
 ## Near-term sequence
 
 ```txt
-Phase 4: TailwindCSS Setup
 Phase 5: Base Layout Shell
 Phase 6: Static Landing Page
+Phase 7: Local Native PostgreSQL Foundation
 ```
 
 ## Patch discipline

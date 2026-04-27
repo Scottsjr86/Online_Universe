@@ -227,7 +227,7 @@ Each phase locks evidence in `docs/goldens/phase-###.md`.
 - [ ] The app can render custom styled pages using Tailwind.
 - [ ] TailwindCSS, `@tailwindcss/vite`, and PostCSS are declared in `app/package.json` and reflected in `app/pnpm-lock.yaml` after workstation install.
 - [ ] `app/src/app.css` is imported from `app/src/routes/+layout.svelte` and defines the base theme tokens.
-- [ ] `scripts/check_phase_tailwind_setup.py` is wired into the professional CI lane before closure.
+- [ ] `scripts/check_phase_tailwind_setup.py` is wired into the professional CI lane before closure and checks both source artifacts and lockfile drift.
 - [ ] All expected artifacts exist, are committed, and match the phase scope.
 - [ ] Global completion laws are satisfied.
 - [ ] Documentation for this phase is updated.
@@ -236,7 +236,7 @@ Each phase locks evidence in `docs/goldens/phase-###.md`.
 **Tests that validate behavior matches intent:**
 
 - [ ] Source smoke check: Render a page with Tailwind utility classes.
-- [ ] Run `PYTHONDONTWRITEBYTECODE=1 python3 scripts/check_phase_tailwind_setup.py`.
+- [ ] Run `PYTHONDONTWRITEBYTECODE=1 python3 scripts/check_phase_tailwind_setup.py` and confirm it validates package and lockfile state.
 - [ ] Run `cd app; pnpm install; pnpm check; pnpm build; pnpm dev` and record Vite readiness.
 - [ ] Run `PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py professional` after the Phase 4 validator and golden checks are wired in.
 - [ ] Run `git diff --check` and project lint/typecheck/build commands where applicable.

@@ -16,6 +16,7 @@ REQUIRED_FILES = [
     'app/src/routes/+layout.svelte',
     'app/src/routes/+page.svelte',
     'docs/design/theme.md',
+    'app/pnpm-lock.yaml',
 ]
 
 REQUIRED_DEV_DEPS = ['@tailwindcss/vite', 'postcss', 'tailwindcss']
@@ -40,6 +41,11 @@ def main() -> int:
     missing_deps = [dep for dep in REQUIRED_DEV_DEPS if dep not in dev_deps]
     if missing_deps:
         return fail('missing Tailwind/PostCSS dev dependency/dependencies: ' + ', '.join(missing_deps))
+
+    lockfile = read('app/pnpm-lock.yaml')
+    missing_locked_deps = [dep for dep in REQUIRED_DEV_DEPS if dep not in lockfile]
+    if missing_locked_deps:
+        return fail('app/pnpm-lock.yaml missing Tailwind/PostCSS dependency/dependencies: ' + ', '.join(missing_locked_deps))
 
     vite_config = read('app/vite.config.ts')
     if "@tailwindcss/vite" not in vite_config or 'tailwindcss()' not in vite_config:

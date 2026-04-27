@@ -6,13 +6,12 @@ Phase 4: TailwindCSS Setup
 
 ## Status
 
-Phase 4 is in progress. This patch installs the Tailwind/PostCSS source contract and CI
-shape checks. It does not close the phase until the workstation lockfile, `pnpm check`,
-`pnpm build`, Vite dev-server proof, and professional CI output are recorded.
+Complete.
 
 ## Implemented behavior
 
 - `app/package.json` declares TailwindCSS, the Tailwind Vite plugin, and PostCSS as dev dependencies.
+- `app/pnpm-lock.yaml` records those dependencies after workstation install.
 - `app/vite.config.ts` loads `tailwindcss()` before `sveltekit()`.
 - `app/src/app.css` imports Tailwind and defines the initial Codex theme tokens.
 - `app/src/routes/+layout.svelte` imports the global CSS entry.
@@ -20,8 +19,8 @@ shape checks. It does not close the phase until the workstation lockfile, `pnpm 
 - `app/tailwind.config.js` records source scanning and initial theme extension.
 - `app/postcss.config.js` creates the PostCSS seam.
 - `docs/design/theme.md` documents the token contract.
-- `scripts/check_phase_tailwind_setup.py` validates Phase 4 artifacts.
-- The professional CI lane runs the Phase 4 Tailwind setup validator.
+- `scripts/check_phase_tailwind_setup.py` validates Phase 4 artifacts and lockfile drift.
+- The professional CI lane runs the Phase 4 validator.
 
 ## Public/admin routes touched
 
@@ -49,10 +48,9 @@ None.
 ## Tests/smokes added
 
 - `PYTHONDONTWRITEBYTECODE=1 python3 scripts/check_phase_tailwind_setup.py`
-- Professional CI lane now includes the Phase 4 validator.
+- Professional CI lane includes the Phase 4 validator.
+- Workstation app smoke covers `pnpm install`, `pnpm check`, `pnpm build`, and `pnpm dev` readiness.
 
-## Handoff notes for next patch
+## Handoff notes for next phase
 
-The next Phase 4 patch must come from a tar that includes the refreshed `app/pnpm-lock.yaml`
-after `pnpm install`, plus workstation proof for `pnpm check`, `pnpm build`, Vite dev server
-readiness, and `scripts/run_ci.py professional`. Only then can Phase 4 close.
+Phase 5 may build the public site frame on top of the Tailwind tokens. Keep Phase 5 scoped to root layout shell, main navigation, footer, responsive container, and baseline futuristic theme. Do not build content pages in Phase 5.
