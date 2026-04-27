@@ -1,0 +1,32 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-codex-void: #050711;
+  --color-codex-panel: #0f172a;
+  --color-codex-ink: #f8fafc;
+  --color-codex-mute: #cbd5e1;
+  --color-codex-cyan: #67e8f9;
+  --color-codex-violet: #a78bfa;
+  --color-codex-ember: #f97316;
+  --radius-codex: 1.5rem;
+  --shadow-codex: 0 1.5rem 4rem rgba(2, 6, 23, 0.38);
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    font-family:
+      Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+      sans-serif;
+  }
+
+  body {
+    min-width: 320px;
+    min-height: 100vh;
+    margin: 0;
+    color: var(--color-codex-ink);
+    background:
+      radial-gradient(circle at top left, rgb(103 232 249 / 18%), transparent 32rem),
+      linear-gradient(135deg, #070914 0%, #111827 48%, #020617 100%);
+  }
+}

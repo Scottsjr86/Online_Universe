@@ -7,8 +7,8 @@ The finished project will become a public lore site and creator-owned admin tool
 ## Current phase state
 
 - Last completed phase: Phase 3, SvelteKit App Scaffold
-- Current phase after this patch: Phase 4, TailwindCSS Setup ready
-- Next candidate phase: Phase 4, TailwindCSS Setup
+- Current phase after this patch: Phase 4, TailwindCSS Setup in progress
+- Next candidate phase: Phase 4, TailwindCSS Setup closure
 
 Machine-readable state lives in `docs/progress.json`.
 Append-only patch history lives in `docs/progress.jsonl`.
@@ -67,7 +67,7 @@ make ci-enterprise
 make phase-close
 ```
 
-The professional lane is the phase-close gate. New tests, smokes, drift checks, and golden checks must be wired into the manifest before a phase is marked complete. Phase 2 adds the identity/content vocabulary check through `scripts/check_phase_identity.py`. Phase 3 adds the scaffold shape and pnpm lockfile check through `scripts/check_phase_app_scaffold.py`.
+The professional lane is the phase-close gate. New tests, smokes, drift checks, and golden checks must be wired into the manifest before a phase is marked complete. Phase 2 adds the identity/content vocabulary check through `scripts/check_phase_identity.py`. Phase 3 adds the scaffold shape and pnpm lockfile check through `scripts/check_phase_app_scaffold.py`. Phase 4 adds the Tailwind setup shape check through `scripts/check_phase_tailwind_setup.py`.
 
 ## Project identity docs
 
@@ -110,3 +110,39 @@ pnpm dev
 ```
 
 `app/pnpm-lock.yaml` is committed and required by the professional CI lane before Phase 3 can remain closed.
+
+
+## Phase 4 Tailwind setup
+
+TailwindCSS is wired through the SvelteKit Vite pipeline. The current Phase 4 source artifacts are:
+
+```txt
+app/src/app.css
+app/src/routes/+layout.svelte
+app/tailwind.config.js
+app/postcss.config.js
+docs/design/theme.md
+scripts/check_phase_tailwind_setup.py
+```
+
+Run the Phase 4 shape check from the repo root:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 python3 scripts/check_phase_tailwind_setup.py
+```
+
+Before Phase 4 closes, refresh dependencies and prove the app path on the workstation:
+
+```bash
+cd app
+pnpm install
+pnpm check
+pnpm build
+pnpm dev
+```
+
+Then run the canonical close gate from the repo root:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py professional
+```

@@ -22,7 +22,7 @@ docs/multiverse_codex_architecture_laws.md
 
 ## Current status
 
-Phase 0, Phase 1, Phase 2, and Phase 3 are complete. Phase 4 is next and must stay scoped to TailwindCSS infrastructure.
+Phase 0, Phase 1, Phase 2, and Phase 3 are complete. Phase 4 is in progress and must stay scoped to TailwindCSS infrastructure until the Tailwind runtime proof is locked.
 
 ## Near-term sequence
 

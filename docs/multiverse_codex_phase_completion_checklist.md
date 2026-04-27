@@ -220,11 +220,14 @@ Each phase locks evidence in `docs/goldens/phase-###.md`.
 
 **Scope lock:** Install and configure: `TailwindCSS; PostCSS; global CSS entry; base theme tokens` Create initial design tokens: `background colors; foreground colors; accent colors; border colors; spacing conventions; radius conventions; shadow conventions`
 
-**Expected artifacts:** `app/tailwind.config.*; app/src/app.css; docs/design/theme.md`
+**Expected artifacts:** `app/tailwind.config.*; app/postcss.config.*; app/src/app.css; app/src/routes/+layout.svelte; docs/design/theme.md; scripts/check_phase_tailwind_setup.py`
 
 **What must be true to call this phase fully complete:**
 
 - [ ] The app can render custom styled pages using Tailwind.
+- [ ] TailwindCSS, `@tailwindcss/vite`, and PostCSS are declared in `app/package.json` and reflected in `app/pnpm-lock.yaml` after workstation install.
+- [ ] `app/src/app.css` is imported from `app/src/routes/+layout.svelte` and defines the base theme tokens.
+- [ ] `scripts/check_phase_tailwind_setup.py` is wired into the professional CI lane before closure.
 - [ ] All expected artifacts exist, are committed, and match the phase scope.
 - [ ] Global completion laws are satisfied.
 - [ ] Documentation for this phase is updated.
@@ -233,7 +236,9 @@ Each phase locks evidence in `docs/goldens/phase-###.md`.
 **Tests that validate behavior matches intent:**
 
 - [ ] Source smoke check: Render a page with Tailwind utility classes.
-- [ ] Run setup/build/check commands from a clean shell and verify the documented happy path works without hidden local state.
+- [ ] Run `PYTHONDONTWRITEBYTECODE=1 python3 scripts/check_phase_tailwind_setup.py`.
+- [ ] Run `cd app; pnpm install; pnpm check; pnpm build; pnpm dev` and record Vite readiness.
+- [ ] Run `PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py professional` after the Phase 4 validator and golden checks are wired in.
 - [ ] Run `git diff --check` and project lint/typecheck/build commands where applicable.
 - [ ] Verify failure cases fail cleanly instead of silently succeeding.
 
@@ -251,6 +256,8 @@ Each phase locks evidence in `docs/goldens/phase-###.md`.
 - [ ] No deferred work ever: no TODO/FIXME/stub/placeholder/mocked-success may count as completion.
 - [ ] No unrelated objectives, surprise refactors, or scope braid.
 - [ ] No secrets, private keys, real credentials, production media, or accidental local files committed.
+- [ ] No Phase 5 shell/navigation/footer work counted as Phase 4.
+- [ ] No component-local CSS counted as Tailwind proof when a utility-class proof is required.
 
 ### Phase 5: Base Layout Shell
 

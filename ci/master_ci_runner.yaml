@@ -59,6 +59,16 @@ lanes:
         run: test -f app/pnpm-lock.yaml
       - name: Check Phase 3 SvelteKit scaffold
         run: python3 -S scripts/check_phase_app_scaffold.py
+      - name: Require Phase 4 theme docs
+        run: test -f docs/design/theme.md
+      - name: Require Phase 4 spec
+        run: test -f docs/specs/phase-004-spec.md
+      - name: Require Phase 4 closure evidence
+        run: test -f docs/closures/phase-004-closure.md
+      - name: Require Phase 4 golden
+        run: test -f docs/goldens/phase-004.md
+      - name: Check Phase 4 Tailwind setup
+        run: python3 -S scripts/check_phase_tailwind_setup.py
       - name: Reject app .gitkeep sentinel
         run: test ! -e app/.gitkeep
       - name: Reject infra .gitkeep sentinel
