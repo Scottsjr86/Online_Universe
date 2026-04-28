@@ -1,15 +1,16 @@
 {
   "current_phase": 7,
   "current_phase_title": "Local Native PostgreSQL Foundation",
-  "phase_status": "in_progress",
-  "last_completed_phase": 6,
-  "next_candidate_phase": 7,
-  "last_patch_id": "phase-007-native-postgres-repair",
-  "updated_at": "2026-04-27T22:40:00Z",
+  "phase_status": "complete",
+  "last_completed_phase": 7,
+  "next_candidate_phase": 8,
+  "last_patch_id": "phase-007-close-native-postgres",
+  "updated_at": "2026-04-27T23:10:00Z",
   "notes": [
-    "Phase 0 through Phase 6 are complete.",
-    "Phase 7 source-control truth gap was repaired: PostgreSQL lifecycle scripts, docs, spec, closure, golden, and validator now exist in the repo.",
-    "Create/reset update an existing app role password before validating the app-user connection to avoid stale credential failures.",
-    "Phase 7 remains open until owner workstation proves create/status/select smoke against native PostgreSQL."
+    "Phase 0 through Phase 7 are complete.",
+    "Phase 7 native PostgreSQL lifecycle scripts exist and are wired into professional CI.",
+    "The owner workstation proved database create/verify, psql DATABASE_URL select smoke, dev-db-status, and professional CI.",
+    "Database password guidance now uses URL-safe hex material so raw DATABASE_URL parsing does not corrupt the connection string.",
+    "Phase 8 is next: environment configuration."
   ]
 }

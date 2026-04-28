@@ -211,12 +211,12 @@ Then run the canonical close gate from the repo root:
 PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py professional
 ```
 
-The page stays static. Database content, public content routes, admin tools, media, auth, and search remain later-phase work. Phase 7 starts the native PostgreSQL foundation.
+The page stays static. Database content, public content routes, admin tools, media, auth, and search remain later-phase work. Phase 7 completed the native PostgreSQL foundation.
 
 
 ## Phase 7 native PostgreSQL foundation
 
-Phase 7 starts the host-native PostgreSQL development database path. The current source artifacts are:
+Phase 7 completed the host-native PostgreSQL development database path. The source artifacts are:
 
 ```txt
 scripts/dev-db-common.sh
@@ -233,10 +233,10 @@ Run the source-shape check from the repo root:
 PYTHONDONTWRITEBYTECODE=1 python3 scripts/check_phase_postgres_native.py
 ```
 
-Run the owner-workstation PostgreSQL smoke path before Phase 7 closure:
+Owner-workstation PostgreSQL smoke path used for Phase 7 closure:
 
 ```bash
-export MULTIVERSE_CODEX_DB_PASSWORD="$(openssl rand -base64 32)"
+export MULTIVERSE_CODEX_DB_PASSWORD="$(openssl rand -hex 32)"
 scripts/dev-db-create.sh
 export DATABASE_URL="postgresql://multiverse_codex_app:${MULTIVERSE_CODEX_DB_PASSWORD}@127.0.0.1:5432/multiverse_codex_dev"
 psql "$DATABASE_URL" -c 'select 1;'
@@ -244,6 +244,6 @@ scripts/dev-db-status.sh
 PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py professional
 ```
 
-The create/reset scripts update the password for an existing `multiverse_codex_app` role before validating the connection, so a stale role password can be repaired by rerunning `scripts/dev-db-create.sh` with the current `MULTIVERSE_CODEX_DB_PASSWORD`.
+The create/reset scripts update the password for an existing `multiverse_codex_app` role before validating the connection, so a stale role password can be repaired by rerunning `scripts/dev-db-create.sh` with the current URL-safe `MULTIVERSE_CODEX_DB_PASSWORD`. Use `openssl rand -hex 32`; raw base64 can include URI-hostile characters that corrupt `DATABASE_URL` parsing.
 
-Phase 7 remains open until those native PostgreSQL smokes pass on the owner workstation. Phase 8 owns `.env.example` and environment validation. Phase 9 owns SvelteKit database client code.
+Phase 7 is closed. Phase 8 owns `.env.example` and environment validation. Phase 9 owns SvelteKit database client code.

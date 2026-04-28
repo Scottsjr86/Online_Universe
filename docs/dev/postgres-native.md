@@ -14,6 +14,9 @@ Port:     5432
 Service:  postgresql
 ```
 
+
+Password note: use URL-safe password material because this phase documents a raw `DATABASE_URL` smoke path. `openssl rand -hex 32` is the canonical generator. URL-hostile characters such as `/`, `+`, `=`, `:`, or `@` can corrupt URI parsing unless percent-encoded, so the scripts fail closed with a clear error for unsafe raw password material.
+
 Override with:
 
 ```bash
@@ -27,7 +30,7 @@ export MULTIVERSE_CODEX_POSTGRES_SERVICE=postgresql
 ## Create or verify the local database
 
 ```bash
-export MULTIVERSE_CODEX_DB_PASSWORD="$(openssl rand -base64 32)"
+export MULTIVERSE_CODEX_DB_PASSWORD="$(openssl rand -hex 32)"
 scripts/dev-db-create.sh
 export DATABASE_URL="postgresql://multiverse_codex_app:${MULTIVERSE_CODEX_DB_PASSWORD}@127.0.0.1:5432/multiverse_codex_dev"
 psql "$DATABASE_URL" -c 'select 1;'
@@ -50,7 +53,7 @@ Dry runs validate arguments, required commands, identifier shape, password prese
 Reset is destructive and requires `--yes`:
 
 ```bash
-export MULTIVERSE_CODEX_DB_PASSWORD="$(openssl rand -base64 32)"
+export MULTIVERSE_CODEX_DB_PASSWORD="$(openssl rand -hex 32)"
 scripts/dev-db-reset.sh --yes
 export DATABASE_URL="postgresql://multiverse_codex_app:${MULTIVERSE_CODEX_DB_PASSWORD}@127.0.0.1:5432/multiverse_codex_dev"
 psql "$DATABASE_URL" -c 'select 1;'

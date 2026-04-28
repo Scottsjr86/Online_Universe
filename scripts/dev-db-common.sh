@@ -30,10 +30,17 @@ mc_validate_identifier() {
   fi
 }
 
+mc_require_url_safe_password() {
+  if [[ ! "${MULTIVERSE_CODEX_DB_PASSWORD}" =~ ^[A-Za-z0-9._~-]+$ ]]; then
+    mc_fail "MULTIVERSE_CODEX_DB_PASSWORD must be URL-safe for DATABASE_URL usage; generate one with: openssl rand -hex 32" 2
+  fi
+}
+
 mc_require_password() {
   if [[ -z "${MULTIVERSE_CODEX_DB_PASSWORD:-}" ]]; then
     mc_fail "set MULTIVERSE_CODEX_DB_PASSWORD before running this command" 2
   fi
+  mc_require_url_safe_password
 }
 
 mc_sql_literal() {

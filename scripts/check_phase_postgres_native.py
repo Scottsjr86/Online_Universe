@@ -31,6 +31,8 @@ EXECUTABLE_FILES = [
 SCRIPT_MARKERS = {
     "scripts/dev-db-common.sh": [
         "mc_validate_identifier",
+        "mc_require_url_safe_password",
+        "openssl rand -hex 32",
         "mc_apply_role_and_database",
         "alter role",
         "mc_test_app_connection",
@@ -61,6 +63,7 @@ DOC_MARKERS = {
         "scripts/dev-db-create.sh",
         "scripts/dev-db-reset.sh --dry-run --yes",
         "scripts/dev-db-status.sh",
+        "openssl rand -hex 32",
         "updates the password for an existing role",
     ],
     "docs/specs/phase-007-spec.md": [
@@ -71,7 +74,7 @@ DOC_MARKERS = {
     ],
     "docs/closures/phase-007-closure.md": [
         "Phase 7",
-        "not closed",
+        "Closed",
         "owner workstation",
         "no work is deferred",
     ],
@@ -79,7 +82,7 @@ DOC_MARKERS = {
         "Phase 7",
         "Commands run",
         "Known limitations",
-        "not closed",
+        "closed",
     ],
 }
 
@@ -98,6 +101,7 @@ CHECKLIST_MARKERS = [
     "scripts/dev-db-status.sh",
     "scripts/check_phase_postgres_native.py",
     "Run `scripts/dev-db-create.sh`",
+    "URL-safe",
 ]
 
 
@@ -147,12 +151,14 @@ def main() -> int:
     progress = json.loads(read("docs/progress.json"))
     if progress.get("current_phase") != 7:
         return fail("progress current_phase is not 7")
-    if progress.get("phase_status") != "in_progress":
-        return fail("Phase 7 must remain in_progress until owner PostgreSQL smoke passes")
-    if progress.get("last_completed_phase") != 6:
-        return fail("last_completed_phase must remain 6 while Phase 7 is open")
+    if progress.get("phase_status") != "complete":
+        return fail("Phase 7 must be complete after owner PostgreSQL smoke passes")
+    if progress.get("last_completed_phase") != 7:
+        return fail("last_completed_phase must be 7 after Phase 7 closure")
+    if progress.get("next_candidate_phase") != 8:
+        return fail("next_candidate_phase must be 8 after Phase 7 closure")
 
-    print("[PASS] Phase 7 native PostgreSQL foundation source artifacts verified")
+    print("[PASS] Phase 7 native PostgreSQL foundation closure artifacts verified")
     return 0
 
 

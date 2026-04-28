@@ -365,7 +365,7 @@ Each phase locks evidence in `docs/goldens/phase-###.md`.
 
 - [ ] PostgreSQL runs locally as a native service and the app can reach the dev database without Docker.
 - [ ] Local database role and local database are created or verified through repo scripts.
-- [ ] The documented `DATABASE_URL` smoke passes with `psql "$DATABASE_URL" -c 'select 1;'`.
+- [ ] The documented URL-safe `DATABASE_URL` smoke passes with `psql "$DATABASE_URL" -c 'select 1;'`.
 - [ ] `scripts/dev-db-status.sh` proves service and connection status from the owner workstation.
 - [ ] Professional CI requires Phase 7 shell syntax checks and `scripts/check_phase_postgres_native.py` before closure.
 - [ ] All expected artifacts exist, are committed, and match the phase scope.
@@ -376,13 +376,14 @@ Each phase locks evidence in `docs/goldens/phase-###.md`.
 **Tests that validate behavior matches intent:**
 
 - [ ] Source smoke check: `systemctl status postgresql; psql "$DATABASE_URL" -c 'select 1;'; scripts/dev-db-status.sh`
-- [ ] Run `scripts/dev-db-create.sh` from a clean shell with `MULTIVERSE_CODEX_DB_PASSWORD` set and verify it creates or verifies the native database and role.
+- [ ] Run `scripts/dev-db-create.sh` from a clean shell with a URL-safe `MULTIVERSE_CODEX_DB_PASSWORD` set, preferably `openssl rand -hex 32`, and verify it creates or verifies the native database and role.
 - [ ] Run `scripts/dev-db-reset.sh --dry-run --yes` and confirm it does not mutate data.
 - [ ] Run `scripts/dev-db-reset.sh --yes` only when a destructive local reset is intended, then verify the database is recreated cleanly.
 - [ ] Run `PYTHONDONTWRITEBYTECODE=1 python3 scripts/check_phase_postgres_native.py`.
 - [ ] Run `PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py professional` as the canonical phase-close gate.
 - [ ] Run `git diff --check` and project lint/typecheck/build commands where applicable.
 - [ ] Verify failure cases fail cleanly instead of silently succeeding.
+- [ ] Verify URL-hostile raw passwords fail cleanly before `DATABASE_URL` parsing can corrupt the smoke path.
 
 **Golden to lock it:**
 
