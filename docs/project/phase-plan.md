@@ -22,14 +22,14 @@ docs/multiverse_codex_architecture_laws.md
 
 ## Current status
 
-Phase 0, Phase 1, Phase 2, Phase 3, Phase 4, and Phase 5 are complete. Phase 6 is in progress and must stay scoped to the static landing page.
+Phase 0, Phase 1, Phase 2, Phase 3, Phase 4, Phase 5, and Phase 6 are complete. Phase 7 is the next candidate and must stay scoped to native PostgreSQL foundation work.
 
 ## Near-term sequence
 
 ```txt
-Phase 6: Static Landing Page (in progress)
 Phase 7: Local Native PostgreSQL Foundation
 Phase 8: Environment Configuration
+Phase 9: Database Connection
 ```
 
 ## Patch discipline

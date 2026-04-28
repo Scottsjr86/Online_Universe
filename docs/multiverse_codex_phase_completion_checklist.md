@@ -326,6 +326,7 @@ Each phase locks evidence in `docs/goldens/phase-###.md`.
 - [ ] Documentation for this phase is updated.
 - [ ] Prior locked behavior still passes.
 - [ ] The professional CI lane includes and passes the Phase 6 landing-page validator before closure.
+- [ ] After closure, the Phase 6 validator checks progress/closure/golden drift so later phases cannot silently reopen or weaken the landing-page proof.
 
 **Tests that validate behavior matches intent:**
 

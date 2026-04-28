@@ -1,15 +1,15 @@
 {
   "current_phase": 6,
   "current_phase_title": "Static Landing Page",
-  "phase_status": "in_progress",
-  "last_completed_phase": 5,
-  "next_candidate_phase": 6,
-  "last_patch_id": "phase-006-static-landing-start",
-  "updated_at": "2026-04-27T19:42:06Z",
+  "phase_status": "complete",
+  "last_completed_phase": 6,
+  "next_candidate_phase": 7,
+  "last_patch_id": "phase-006-close-static-landing",
+  "updated_at": "2026-04-27T21:36:22Z",
   "notes": [
-    "Phase 0 through Phase 5 are complete.",
-    "Phase 6 static landing page source shape is implemented and professional CI is wired to validate it.",
-    "Phase 6 remains open until owner workstation proof for pnpm check, pnpm build, pnpm dev readiness, desktop/mobile / smoke, and professional CI is recorded.",
-    "Phase 6 must not add database, admin, auth, media, search, or public content-route behavior."
+    "Phase 0 through Phase 6 are complete.",
+    "Phase 6 static landing page is implemented, documented, validated, and proven green on the owner workstation.",
+    "Professional CI remains the canonical phase-close gate with Phase 6 landing-page drift checks wired into ci/master_ci_runner.yaml.",
+    "Phase 7 is the next candidate and must stay scoped to native PostgreSQL foundation work."
   ]
 }

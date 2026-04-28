@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the Phase 6 static landing page shape."""
+"""Validate the Phase 6 static landing page shape and closure drift."""
 
 from __future__ import annotations
 
@@ -71,21 +71,29 @@ def require_page_shape() -> int | None:
 
 def require_docs_shape() -> int | None:
     progress = json.loads(read('docs/progress.json'))
-    expected = {
-        'current_phase': 6,
-        'current_phase_title': 'Static Landing Page',
-        'phase_status': 'in_progress',
-        'last_completed_phase': 5,
-        'next_candidate_phase': 6,
-        'last_patch_id': 'phase-006-static-landing-start',
-    }
-    for key, value in expected.items():
-        if progress.get(key) != value:
-            return fail(f'docs/progress.json expected {key}={value!r}, got {progress.get(key)!r}')
+    if progress.get('last_completed_phase', -1) < 6:
+        return fail('docs/progress.json must keep Phase 6 in the completed ladder')
+
+    current_phase = progress.get('current_phase', 0)
+    if current_phase <= 6:
+        expected = {
+            'current_phase': 6,
+            'current_phase_title': 'Static Landing Page',
+            'phase_status': 'complete',
+            'last_completed_phase': 6,
+            'next_candidate_phase': 7,
+            'last_patch_id': 'phase-006-close-static-landing',
+        }
+        for key, value in expected.items():
+            if progress.get(key) != value:
+                return fail(f'docs/progress.json expected {key}={value!r}, got {progress.get(key)!r}')
+    elif progress.get('current_phase', 0) > 6 and progress.get('next_candidate_phase', 0) < 7:
+        return fail('docs/progress.json regressed below the Phase 7 handoff')
 
     closure = read('docs/closures/phase-006-closure.md')
     spec = read('docs/specs/phase-006-spec.md')
     golden = read('docs/goldens/phase-006.md')
+    docs = '\n'.join([closure, spec, golden])
     required_doc_markers = [
         'hero',
         'universe teaser',
@@ -94,13 +102,25 @@ def require_docs_shape() -> int | None:
         'call-to-action',
         'No database',
         'professional CI',
+        'pnpm check',
+        'pnpm build',
+        'pnpm dev',
+        'desktop/mobile `/` smoke',
     ]
     for marker in required_doc_markers:
-        combined = '\n'.join([closure, spec, golden])
-        if marker not in combined:
+        if marker not in docs:
             return fail(f'Phase 6 docs missing marker {marker!r}')
-    if 'In progress.' not in closure or 'Not closed.' not in golden:
-        return fail('Phase 6 docs must remain open until workstation app proof is recorded')
+
+    for path, content in [
+        ('docs/closures/phase-006-closure.md', closure),
+        ('docs/specs/phase-006-spec.md', spec),
+        ('docs/goldens/phase-006.md', golden),
+    ]:
+        if 'Complete.' not in content:
+            return fail(f'{path} must record complete status after Phase 6 closes')
+        for forbidden in ['In progress.', 'Not closed.', 'Phase 6 is open', 'pending owner run']:
+            if forbidden in content:
+                return fail(f'{path} still contains open-phase marker {forbidden!r}')
     return None
 
 
