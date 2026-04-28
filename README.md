@@ -7,7 +7,7 @@ The finished project will become a public lore site and creator-owned admin tool
 ## Current phase state
 
 - Last completed phase: Phase 6, Static Landing Page
-- Current phase after this patch: Phase 6 complete
+- Current phase after this patch: Phase 7 in progress
 - Next candidate phase: Phase 7, Local Native PostgreSQL Foundation
 
 Machine-readable state lives in `docs/progress.json`.
@@ -67,7 +67,7 @@ make ci-enterprise
 make phase-close
 ```
 
-The professional lane is the phase-close gate. New tests, smokes, drift checks, and golden checks must be wired into the manifest before a phase is marked complete. Phase 2 adds the identity/content vocabulary check through `scripts/check_phase_identity.py`. Phase 3 adds the scaffold shape and pnpm lockfile check through `scripts/check_phase_app_scaffold.py`. Phase 4 adds the Tailwind setup and lockfile drift check through `scripts/check_phase_tailwind_setup.py`. Phase 5 adds the site shell shape and closure drift check through `scripts/check_phase_site_shell.py`. Phase 6 adds the static landing page source-shape and closure drift check through `scripts/check_phase_landing_page.py`.
+The professional lane is the phase-close gate. New tests, smokes, drift checks, and golden checks must be wired into the manifest before a phase is marked complete. Phase 2 adds the identity/content vocabulary check through `scripts/check_phase_identity.py`. Phase 3 adds the scaffold shape and pnpm lockfile check through `scripts/check_phase_app_scaffold.py`. Phase 4 adds the Tailwind setup and lockfile drift check through `scripts/check_phase_tailwind_setup.py`. Phase 5 adds the site shell shape and closure drift check through `scripts/check_phase_site_shell.py`. Phase 6 adds the static landing page source-shape and closure drift check through `scripts/check_phase_landing_page.py`. Phase 7 adds native PostgreSQL lifecycle script checks through `scripts/check_phase_postgres_native.py`.
 
 ## Project identity docs
 
@@ -212,3 +212,38 @@ PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py professional
 ```
 
 The page stays static. Database content, public content routes, admin tools, media, auth, and search remain later-phase work. Phase 7 starts the native PostgreSQL foundation.
+
+
+## Phase 7 native PostgreSQL foundation
+
+Phase 7 starts the host-native PostgreSQL development database path. The current source artifacts are:
+
+```txt
+scripts/dev-db-common.sh
+scripts/dev-db-create.sh
+scripts/dev-db-reset.sh
+scripts/dev-db-status.sh
+docs/dev/postgres-native.md
+scripts/check_phase_postgres_native.py
+```
+
+Run the source-shape check from the repo root:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 python3 scripts/check_phase_postgres_native.py
+```
+
+Run the owner-workstation PostgreSQL smoke path before Phase 7 closure:
+
+```bash
+export MULTIVERSE_CODEX_DB_PASSWORD="$(openssl rand -base64 32)"
+scripts/dev-db-create.sh
+export DATABASE_URL="postgresql://multiverse_codex_app:${MULTIVERSE_CODEX_DB_PASSWORD}@127.0.0.1:5432/multiverse_codex_dev"
+psql "$DATABASE_URL" -c 'select 1;'
+scripts/dev-db-status.sh
+PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py professional
+```
+
+The create/reset scripts update the password for an existing `multiverse_codex_app` role before validating the connection, so a stale role password can be repaired by rerunning `scripts/dev-db-create.sh` with the current `MULTIVERSE_CODEX_DB_PASSWORD`.
+
+Phase 7 remains open until those native PostgreSQL smokes pass on the owner workstation. Phase 8 owns `.env.example` and environment validation. Phase 9 owns SvelteKit database client code.

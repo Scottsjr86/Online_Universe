@@ -2,7 +2,7 @@ SHELL := /usr/bin/env bash
 PYTHON ?= python3
 CI := PYTHONDONTWRITEBYTECODE=1 $(PYTHON) scripts/run_ci.py
 
-.PHONY: help status verify-workstation phase-docs ci-list ci-quick ci-professional ci-release ci-enterprise phase-close app-install app-check app-build app-dev
+.PHONY: help status verify-workstation phase-docs ci-list ci-quick ci-professional ci-release ci-enterprise phase-close app-install app-check app-build app-dev dev-db-create dev-db-reset dev-db-status
 
 help:
 	@printf 'Multiverse Codex developer targets\n'
@@ -21,6 +21,9 @@ help:
 	@printf 'app-check            Run SvelteKit type checking.\n'
 	@printf 'app-build            Build the SvelteKit app.\n'
 	@printf 'app-dev              Start the SvelteKit dev server.\n'
+	@printf 'dev-db-create        Create or verify the native local PostgreSQL dev database.\n'
+	@printf 'dev-db-reset         Reset the native local PostgreSQL dev database; pass ARGS=--yes.\n'
+	@printf 'dev-db-status        Check native local PostgreSQL dev database status.\n'
 
 status:
 	@git status --short
@@ -65,3 +68,13 @@ app-build:
 
 app-dev:
 	@pnpm --dir app dev
+
+
+dev-db-create:
+	@bash scripts/dev-db-create.sh $(ARGS)
+
+dev-db-reset:
+	@bash scripts/dev-db-reset.sh $(ARGS)
+
+dev-db-status:
+	@bash scripts/dev-db-status.sh $(ARGS)

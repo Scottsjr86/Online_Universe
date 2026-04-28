@@ -99,6 +99,16 @@ lanes:
         run: test ! -e scripts/local-ci.sh
       - name: Reject legacy local CI Python runner
         run: test ! -e scripts/local_ci.py
+      - name: Check Phase 7 db common shell syntax
+        run: bash -n scripts/dev-db-common.sh
+      - name: Check Phase 7 db create shell syntax
+        run: bash -n scripts/dev-db-create.sh
+      - name: Check Phase 7 db reset shell syntax
+        run: bash -n scripts/dev-db-reset.sh
+      - name: Check Phase 7 db status shell syntax
+        run: bash -n scripts/dev-db-status.sh
+      - name: Check Phase 7 native PostgreSQL foundation
+        run: python3 -S scripts/check_phase_postgres_native.py
 
   release:
     description: Ship-adjacent local verification.

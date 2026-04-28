@@ -1,15 +1,15 @@
 {
-  "current_phase": 6,
-  "current_phase_title": "Static Landing Page",
-  "phase_status": "complete",
+  "current_phase": 7,
+  "current_phase_title": "Local Native PostgreSQL Foundation",
+  "phase_status": "in_progress",
   "last_completed_phase": 6,
   "next_candidate_phase": 7,
-  "last_patch_id": "phase-006-close-static-landing",
-  "updated_at": "2026-04-27T21:36:22Z",
+  "last_patch_id": "phase-007-native-postgres-repair",
+  "updated_at": "2026-04-27T22:40:00Z",
   "notes": [
     "Phase 0 through Phase 6 are complete.",
-    "Phase 6 static landing page is implemented, documented, validated, and proven green on the owner workstation.",
-    "Professional CI remains the canonical phase-close gate with Phase 6 landing-page drift checks wired into ci/master_ci_runner.yaml.",
-    "Phase 7 is the next candidate and must stay scoped to native PostgreSQL foundation work."
+    "Phase 7 source-control truth gap was repaired: PostgreSQL lifecycle scripts, docs, spec, closure, golden, and validator now exist in the repo.",
+    "Create/reset update an existing app role password before validating the app-user connection to avoid stale credential failures.",
+    "Phase 7 remains open until owner workstation proves create/status/select smoke against native PostgreSQL."
   ]
 }

@@ -22,12 +22,12 @@ docs/multiverse_codex_architecture_laws.md
 
 ## Current status
 
-Phase 0, Phase 1, Phase 2, Phase 3, Phase 4, Phase 5, and Phase 6 are complete. Phase 7 is the next candidate and must stay scoped to native PostgreSQL foundation work.
+Phase 0, Phase 1, Phase 2, Phase 3, Phase 4, Phase 5, and Phase 6 are complete. Phase 7 is in progress and scoped to native PostgreSQL foundation work.
 
 ## Near-term sequence
 
 ```txt
-Phase 7: Local Native PostgreSQL Foundation
+Phase 7: Local Native PostgreSQL Foundation (in progress)
 Phase 8: Environment Configuration
 Phase 9: Database Connection
 ```
