@@ -28,7 +28,7 @@ In progress. Not closed.
 
 ## Behavior proven
 
-Source and CI can prove the Phase 8 artifacts exist, the validation seam is wired, the root `.env` loading path is configured, and the professional lane includes the Phase 8 validator.
+Source and CI can prove the Phase 8 artifacts exist, the validation seam is wired, the root `.env` loading path is configured and the server-only fallback parser exists, and the professional lane includes the Phase 8 validator.
 
 Owner workstation runtime proof is still required before this phase can close.
 

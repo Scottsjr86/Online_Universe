@@ -1,3 +1,6 @@
+import { existsSync, readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+
 import { env as privateEnv } from '$env/dynamic/private';
 import { env as publicEnv } from '$env/dynamic/public';
 
@@ -27,9 +30,11 @@ const REQUIRED_ENV_NAMES: RequiredEnvName[] = [
 ];
 
 let cachedServerEnv: ServerEnv | null = null;
+let cachedRootDotEnv: EnvSource | null = null;
 
 export function clearServerEnvCacheForTests(): void {
   cachedServerEnv = null;
+  cachedRootDotEnv = null;
 }
 
 export function getServerEnv(source?: EnvSource): ServerEnv {
@@ -60,12 +65,71 @@ export function validateServerEnv(source: EnvSource = readRuntimeEnv()): ServerE
 }
 
 function readRuntimeEnv(): EnvSource {
+  const rootDotEnv = readRootDotEnvFallback();
+
   return {
-    DATABASE_URL: privateEnv.DATABASE_URL,
-    SESSION_SECRET: privateEnv.SESSION_SECRET,
-    PUBLIC_SITE_NAME: publicEnv.PUBLIC_SITE_NAME,
-    MEDIA_ROOT: privateEnv.MEDIA_ROOT,
+    DATABASE_URL: privateEnv.DATABASE_URL ?? rootDotEnv.DATABASE_URL,
+    SESSION_SECRET: privateEnv.SESSION_SECRET ?? rootDotEnv.SESSION_SECRET,
+    PUBLIC_SITE_NAME: publicEnv.PUBLIC_SITE_NAME ?? rootDotEnv.PUBLIC_SITE_NAME,
+    MEDIA_ROOT: privateEnv.MEDIA_ROOT ?? rootDotEnv.MEDIA_ROOT,
   };
+}
+
+function readRootDotEnvFallback(): EnvSource {
+  if (cachedRootDotEnv) {
+    return cachedRootDotEnv;
+  }
+
+  const candidates = [
+    resolve(process.cwd(), '.env'),
+    resolve(process.cwd(), '..', '.env'),
+  ];
+
+  for (const candidate of candidates) {
+    if (!existsSync(candidate)) {
+      continue;
+    }
+
+    cachedRootDotEnv = parseDotEnv(readFileSync(candidate, 'utf8'));
+    return cachedRootDotEnv;
+  }
+
+  cachedRootDotEnv = {};
+  return cachedRootDotEnv;
+}
+
+function parseDotEnv(content: string): EnvSource {
+  const parsed: EnvSource = {};
+  for (const rawLine of content.split(/\r?\n/)) {
+    const line = rawLine.trim();
+    if (!line || line.startsWith('#')) {
+      continue;
+    }
+
+    const equalsIndex = line.indexOf('=');
+    if (equalsIndex <= 0) {
+      continue;
+    }
+
+    const key = line.slice(0, equalsIndex).trim();
+    const rawValue = line.slice(equalsIndex + 1).trim();
+    if (!REQUIRED_ENV_NAMES.includes(key as RequiredEnvName)) {
+      continue;
+    }
+
+    parsed[key as RequiredEnvName] = stripEnvQuotes(rawValue);
+  }
+  return parsed;
+}
+
+function stripEnvQuotes(value: string): string {
+  if (
+    (value.startsWith('"') && value.endsWith('"')) ||
+    (value.startsWith("'") && value.endsWith("'"))
+  ) {
+    return value.slice(1, -1);
+  }
+  return value;
 }
 
 function readRequiredEnv(source: EnvSource): Record<RequiredEnvName, string> {

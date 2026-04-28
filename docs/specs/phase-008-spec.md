@@ -10,7 +10,7 @@ Phase 8 starts environment standardization for the SvelteKit app:
 
 - `.env.example` defines the required variables: `DATABASE_URL`, `SESSION_SECRET`, `PUBLIC_SITE_NAME`, and `MEDIA_ROOT`.
 - `app/vite.config.ts` resolves an absolute repository-root `envDir` from `import.meta.url` so app commands run from `app/` read the repository-root `.env` file.
-- `app/src/lib/server/env.ts` centralizes server-side environment parsing and validation, reading private values from `$env/dynamic/private` and `PUBLIC_SITE_NAME` from `$env/dynamic/public`.
+- `app/src/lib/server/env.ts` centralizes server-side environment parsing and validation, reading private values from `$env/dynamic/private`, `PUBLIC_SITE_NAME` from `$env/dynamic/public`, and falling back to the root `.env` file when SvelteKit runtime env does not hydrate.
 - `app/src/hooks.server.ts` validates environment configuration at the request boundary and stores the parsed config on `event.locals.env`.
 - `app/src/app.d.ts` types `event.locals.env` with a read-only parsed environment shape.
 - `docs/dev/environment.md` documents valid local values, root `.env` loading, missing-env failure checks, and troubleshooting.

@@ -12,7 +12,7 @@ This slice starts Phase 8 by adding explicit environment configuration artifacts
 - `app/src/lib/server/env.ts`
 - `app/src/hooks.server.ts`
 - typed `event.locals.env`
-- root `.env` loading through an absolute repo-root `envDir`
+- root `.env` loading through an absolute repo-root `envDir` plus a server-only `.env` fallback parser
 - `docs/dev/environment.md`
 - Phase 8 validator and professional CI wiring
 

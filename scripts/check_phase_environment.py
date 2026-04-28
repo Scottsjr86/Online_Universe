@@ -66,6 +66,11 @@ def require_server_env_module() -> int | None:
         'validateServerEnv',
         'clearServerEnvCacheForTests',
         'readRuntimeEnv',
+        'readRootDotEnvFallback',
+        'parseDotEnv',
+        'stripEnvQuotes',
+        'existsSync(candidate)',
+        "resolve(process.cwd(), '..', '.env')",
         'privateEnv.DATABASE_URL',
         'publicEnv.PUBLIC_SITE_NAME',
         'privateEnv.MEDIA_ROOT',
@@ -152,7 +157,7 @@ def require_progress_state() -> int | None:
         'current_phase_title': 'Environment Configuration',
         'phase_status': 'in_progress',
         'next_candidate_phase': 8,
-        'last_patch_id': 'phase-008-env-loader-repair',
+        'last_patch_id': 'phase-008-root-dotenv-fallback-repair',
     }
     for key, value in expected.items():
         if progress.get(key) != value:

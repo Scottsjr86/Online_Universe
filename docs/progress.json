@@ -4,12 +4,12 @@
   "phase_status": "in_progress",
   "last_completed_phase": 7,
   "next_candidate_phase": 8,
-  "last_patch_id": "phase-008-env-loader-repair",
-  "updated_at": "2026-04-28T00:25:00Z",
+  "last_patch_id": "phase-008-root-dotenv-fallback-repair",
+  "updated_at": "2026-04-28T15:45:00Z",
   "notes": [
     "Phase 0 through Phase 7 are complete.",
-    "Phase 8 has server-side env validation and repo-root env loading wired.",
-    "This repair makes envDir absolute, reads PUBLIC_SITE_NAME from the public env channel, and rejects DATABASE_URL placeholders clearly.",
-    "Phase 8 remains open until the owner workstation proves valid-env app check/build/dev, missing-env fail-closed behavior, and professional CI."
+    "Phase 8 has server-side env validation and root .env loading wired.",
+    "This repair keeps absolute envDir, preserves public/private env split, and adds a server-only root .env fallback parser because owner workstation force-fed env succeeded while normal .env loading failed.",
+    "Phase 8 remains open until the owner workstation proves regular valid-env app check/build/dev, missing-env fail-closed behavior, and professional CI."
   ]
 }
