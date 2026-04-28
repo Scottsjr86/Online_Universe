@@ -408,13 +408,19 @@ Each phase locks evidence in `docs/goldens/phase-###.md`.
 
 **Intent:** Standardize environment variables.
 
-**Scope lock:** Create: `.env.example; app/src/lib/server/env.ts` Define required variables: `DATABASE_URL; SESSION_SECRET; PUBLIC_SITE_NAME; MEDIA_ROOT` Add validation.
+**Scope lock:** Create: `.env.example; app/src/lib/server/env.ts` Define required variables: `DATABASE_URL; SESSION_SECRET; PUBLIC_SITE_NAME; MEDIA_ROOT` Add validation. Configure the app to read the repository-root `.env` while commands run from `app/`. Do not add database client code, Drizzle, pg, migrations, auth/session behavior, media storage, or public/admin routes in this phase.
 
-**Expected artifacts:** `.env.example; docs/dev/environment.md`
+**Expected artifacts:** `.env.example; app/src/lib/server/env.ts; app/src/hooks.server.ts; app/src/app.d.ts; docs/dev/environment.md; scripts/check_phase_environment.py`
 
 **What must be true to call this phase fully complete:**
 
 - [ ] Environment config is explicit, validated, and documented.
+- [ ] `.env.example` defines every required variable without committing real secrets.
+- [ ] Root `.env` loading works for app commands run from `app/`.
+- [ ] Server-side validation fails closed for missing or malformed required variables.
+- [ ] Valid `.env` allows the app check/build/dev path to run.
+- [ ] Missing `.env` or missing required variables fail clearly.
+- [ ] The Phase 8 validator is wired into the professional CI lane.
 - [ ] All expected artifacts exist, are committed, and match the phase scope.
 - [ ] Global completion laws are satisfied.
 - [ ] Documentation for this phase is updated.
@@ -422,8 +428,10 @@ Each phase locks evidence in `docs/goldens/phase-###.md`.
 
 **Tests that validate behavior matches intent:**
 
+- [ ] Source smoke check: `PYTHONDONTWRITEBYTECODE=1 python3 scripts/check_phase_environment.py`.
 - [ ] Source smoke check: Run app with valid `.env`. Run app with missing env and confirm it fails clearly.
-- [ ] Run setup/build/check commands from a clean shell and verify the documented happy path works without hidden local state.
+- [ ] App checks: `cd app; pnpm check; pnpm build; pnpm dev`.
+- [ ] Close gate: `PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py professional`.
 - [ ] Run `git diff --check` and project lint/typecheck/build commands where applicable.
 - [ ] Verify failure cases fail cleanly instead of silently succeeding.
 
@@ -431,7 +439,7 @@ Each phase locks evidence in `docs/goldens/phase-###.md`.
 
 - [ ] Create/update `docs/goldens/phase-008.md`.
 - [ ] Record commands run, outputs summarized, files changed, and final commit hash.
-- [ ] Include terminal transcript snippets for install, deploy, ops, or environment commands.
+- [ ] Include terminal transcript snippets for valid-env and missing-env smokes.
 - [ ] Golden states any limitations and confirms none violate phase intent.
 
 **Hard no's:**
@@ -441,6 +449,9 @@ Each phase locks evidence in `docs/goldens/phase-###.md`.
 - [ ] No deferred work ever: no TODO/FIXME/stub/placeholder/mocked-success may count as completion.
 - [ ] No unrelated objectives, surprise refactors, or scope braid.
 - [ ] No secrets, private keys, real credentials, production media, or accidental local files committed.
+- [ ] No database client, Drizzle config, schema, migration, or query code.
+- [ ] No media filesystem creation or upload behavior.
+- [ ] No client-only validation for required server configuration.
 
 ### Phase 9: Database Connection
 

@@ -109,6 +109,18 @@ lanes:
         run: bash -n scripts/dev-db-status.sh
       - name: Check Phase 7 native PostgreSQL foundation
         run: python3 -S scripts/check_phase_postgres_native.py
+      - name: Require Phase 8 env example
+        run: test -f .env.example
+      - name: Require Phase 8 environment docs
+        run: test -f docs/dev/environment.md
+      - name: Require Phase 8 spec
+        run: test -f docs/specs/phase-008-spec.md
+      - name: Require Phase 8 closure evidence
+        run: test -f docs/closures/phase-008-closure.md
+      - name: Require Phase 8 golden
+        run: test -f docs/goldens/phase-008.md
+      - name: Check Phase 8 environment configuration
+        run: python3 -S scripts/check_phase_environment.py
 
   release:
     description: Ship-adjacent local verification.

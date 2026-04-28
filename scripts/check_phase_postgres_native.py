@@ -149,14 +149,19 @@ def main() -> int:
             return fail(f"checklist missing Phase 7 marker: {marker}")
 
     progress = json.loads(read("docs/progress.json"))
-    if progress.get("current_phase") != 7:
-        return fail("progress current_phase is not 7")
-    if progress.get("phase_status") != "complete":
-        return fail("Phase 7 must be complete after owner PostgreSQL smoke passes")
-    if progress.get("last_completed_phase") != 7:
-        return fail("last_completed_phase must be 7 after Phase 7 closure")
-    if progress.get("next_candidate_phase") != 8:
-        return fail("next_candidate_phase must be 8 after Phase 7 closure")
+    current_phase = progress.get("current_phase", 0)
+    if progress.get("last_completed_phase", -1) < 7:
+        return fail("last_completed_phase must keep Phase 7 in the completed ladder")
+    if current_phase == 7:
+        if progress.get("phase_status") != "complete":
+            return fail("Phase 7 must be complete after owner PostgreSQL smoke passes")
+        if progress.get("next_candidate_phase") != 8:
+            return fail("next_candidate_phase must be 8 after Phase 7 closure")
+    elif current_phase > 7:
+        if progress.get("next_candidate_phase", 0) < 8:
+            return fail("next_candidate_phase regressed below Phase 8 after Phase 7 closure")
+    else:
+        return fail("progress current_phase regressed below Phase 7")
 
     print("[PASS] Phase 7 native PostgreSQL foundation closure artifacts verified")
     return 0

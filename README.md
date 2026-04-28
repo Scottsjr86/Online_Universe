@@ -6,9 +6,9 @@ The finished project will become a public lore site and creator-owned admin tool
 
 ## Current phase state
 
-- Last completed phase: Phase 6, Static Landing Page
-- Current phase after this patch: Phase 7 in progress
-- Next candidate phase: Phase 7, Local Native PostgreSQL Foundation
+- Last completed phase: Phase 7, Local Native PostgreSQL Foundation
+- Current phase after this patch: Phase 8 in progress
+- Next candidate phase: Phase 8, Environment Configuration
 
 Machine-readable state lives in `docs/progress.json`.
 Append-only patch history lives in `docs/progress.jsonl`.
@@ -67,7 +67,7 @@ make ci-enterprise
 make phase-close
 ```
 
-The professional lane is the phase-close gate. New tests, smokes, drift checks, and golden checks must be wired into the manifest before a phase is marked complete. Phase 2 adds the identity/content vocabulary check through `scripts/check_phase_identity.py`. Phase 3 adds the scaffold shape and pnpm lockfile check through `scripts/check_phase_app_scaffold.py`. Phase 4 adds the Tailwind setup and lockfile drift check through `scripts/check_phase_tailwind_setup.py`. Phase 5 adds the site shell shape and closure drift check through `scripts/check_phase_site_shell.py`. Phase 6 adds the static landing page source-shape and closure drift check through `scripts/check_phase_landing_page.py`. Phase 7 adds native PostgreSQL lifecycle script checks through `scripts/check_phase_postgres_native.py`.
+The professional lane is the phase-close gate. New tests, smokes, drift checks, and golden checks must be wired into the manifest before a phase is marked complete. Phase 2 adds the identity/content vocabulary check through `scripts/check_phase_identity.py`. Phase 3 adds the scaffold shape and pnpm lockfile check through `scripts/check_phase_app_scaffold.py`. Phase 4 adds the Tailwind setup and lockfile drift check through `scripts/check_phase_tailwind_setup.py`. Phase 5 adds the site shell shape and closure drift check through `scripts/check_phase_site_shell.py`. Phase 6 adds the static landing page source-shape and closure drift check through `scripts/check_phase_landing_page.py`. Phase 7 adds native PostgreSQL lifecycle script checks through `scripts/check_phase_postgres_native.py`. Phase 8 adds environment configuration source-shape checks through `scripts/check_phase_environment.py`.
 
 ## Project identity docs
 
@@ -246,4 +246,43 @@ PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py professional
 
 The create/reset scripts update the password for an existing `multiverse_codex_app` role before validating the connection, so a stale role password can be repaired by rerunning `scripts/dev-db-create.sh` with the current URL-safe `MULTIVERSE_CODEX_DB_PASSWORD`. Use `openssl rand -hex 32`; raw base64 can include URI-hostile characters that corrupt `DATABASE_URL` parsing.
 
-Phase 7 is closed. Phase 8 owns `.env.example` and environment validation. Phase 9 owns SvelteKit database client code.
+Phase 7 is closed. Phase 8 is open and owns `.env.example`, root `.env` loading, server-side environment validation, and missing-env failure proof. Phase 9 owns SvelteKit database client code.
+
+
+## Phase 8 environment configuration
+
+Phase 8 starts explicit environment configuration. The source artifacts are:
+
+```txt
+.env.example
+app/src/lib/server/env.ts
+app/src/hooks.server.ts
+app/src/app.d.ts
+docs/dev/environment.md
+scripts/check_phase_environment.py
+```
+
+Run the Phase 8 source-shape check from the repo root:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 python3 scripts/check_phase_environment.py
+```
+
+Create a local `.env` from the example before running the app:
+
+```bash
+cp .env.example .env
+# Replace every example value. Use openssl rand -hex 32 for secret material.
+cd app
+pnpm check
+pnpm build
+pnpm dev
+```
+
+Then run the canonical close gate from the repo root:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py professional
+```
+
+Phase 8 remains open until valid-env and missing-env workstation smokes are recorded.

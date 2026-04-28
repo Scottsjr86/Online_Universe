@@ -3,7 +3,14 @@
 declare global {
   namespace App {
     // interface Error {}
-    // interface Locals {}
+    interface Locals {
+      env: Readonly<{
+        databaseUrl: string;
+        sessionSecret: string;
+        publicSiteName: string;
+        mediaRoot: string;
+      }>;
+    }
     // interface PageData {}
     // interface PageState {}
     // interface Platform {}
