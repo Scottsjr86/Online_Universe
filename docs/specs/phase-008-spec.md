@@ -9,8 +9,8 @@ Phase 8: Environment Configuration
 Phase 8 starts environment standardization for the SvelteKit app:
 
 - `.env.example` defines the required variables: `DATABASE_URL`, `SESSION_SECRET`, `PUBLIC_SITE_NAME`, and `MEDIA_ROOT`.
-- `app/vite.config.ts` sets `envDir: '..'` so app commands run from `app/` read the repository-root `.env` file.
-- `app/src/lib/server/env.ts` centralizes server-only environment parsing and validation.
+- `app/vite.config.ts` resolves an absolute repository-root `envDir` from `import.meta.url` so app commands run from `app/` read the repository-root `.env` file.
+- `app/src/lib/server/env.ts` centralizes server-side environment parsing and validation, reading private values from `$env/dynamic/private` and `PUBLIC_SITE_NAME` from `$env/dynamic/public`.
 - `app/src/hooks.server.ts` validates environment configuration at the request boundary and stores the parsed config on `event.locals.env`.
 - `app/src/app.d.ts` types `event.locals.env` with a read-only parsed environment shape.
 - `docs/dev/environment.md` documents valid local values, root `.env` loading, missing-env failure checks, and troubleshooting.
@@ -34,7 +34,7 @@ None. Phase 8 creates no database client, no schema tables, and no migrations.
 
 - Environment validation is server-owned in `app/src/lib/server/env.ts`.
 - Required variables fail closed when missing or empty.
-- `DATABASE_URL` must parse as a PostgreSQL URL with host and database name.
+- `DATABASE_URL` must parse as a PostgreSQL URL with host and database name and must not keep the example placeholder password.
 - `SESSION_SECRET` must be at least 32 characters and cannot keep the example marker.
 - `PUBLIC_SITE_NAME` is bounded to 80 characters.
 - `MEDIA_ROOT` must be an absolute path and must not contain traversal segments.

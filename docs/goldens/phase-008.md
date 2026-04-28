@@ -12,7 +12,7 @@ This slice starts Phase 8 by adding explicit environment configuration artifacts
 - `app/src/lib/server/env.ts`
 - `app/src/hooks.server.ts`
 - typed `event.locals.env`
-- root `.env` loading through `envDir: '..'`
+- root `.env` loading through an absolute repo-root `envDir`
 - `docs/dev/environment.md`
 - Phase 8 validator and professional CI wiring
 
@@ -55,7 +55,7 @@ Owner workstation commands required before close:
 
 ```bash
 cp .env.example .env
-# Replace every example value.
+# Replace every example value. Leaving placeholders should fail clearly.
 cd app
 pnpm check
 pnpm build
@@ -79,6 +79,8 @@ Phase 8 remains open until workstation valid-env and missing-env smokes are reco
 Patch artifact only. No permanent repo commit hash is available in this environment.
 
 ## Hard no review
+
+Pre-existing canonical phase-control docs over 1,000 LOC were reviewed: `docs/multiverse_codex_phase_plan.md` and `docs/multiverse_codex_phase_completion_checklist.md`. They remain intentionally single authoritative control docs for the current workflow; this repair only updates Phase 8-specific text inside that contract.
 
 - No database client added.
 - No Drizzle or pg package added.

@@ -4,11 +4,12 @@
   "phase_status": "in_progress",
   "last_completed_phase": 7,
   "next_candidate_phase": 8,
-  "last_patch_id": "phase-008-environment-config-start",
-  "updated_at": "2026-04-28T00:05:00Z",
+  "last_patch_id": "phase-008-env-loader-repair",
+  "updated_at": "2026-04-28T00:25:00Z",
   "notes": [
     "Phase 0 through Phase 7 are complete.",
-    "Phase 8 has started with .env.example, server-only env validation, root .env loading, and professional CI source validation.",
+    "Phase 8 has server-side env validation and repo-root env loading wired.",
+    "This repair makes envDir absolute, reads PUBLIC_SITE_NAME from the public env channel, and rejects DATABASE_URL placeholders clearly.",
     "Phase 8 remains open until the owner workstation proves valid-env app check/build/dev, missing-env fail-closed behavior, and professional CI."
   ]
 }

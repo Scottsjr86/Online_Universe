@@ -58,17 +58,23 @@ def require_server_env_module() -> int | None:
     text = read('app/src/lib/server/env.ts')
     markers = [
         "import { env as privateEnv } from '$env/dynamic/private'",
+        "import { env as publicEnv } from '$env/dynamic/public'",
         'EnvironmentConfigError',
         'RequiredEnvName',
         'ServerEnv',
         'getServerEnv',
         'validateServerEnv',
         'clearServerEnvCacheForTests',
+        'readRuntimeEnv',
+        'privateEnv.DATABASE_URL',
+        'publicEnv.PUBLIC_SITE_NAME',
+        'privateEnv.MEDIA_ROOT',
         'DATABASE_URL',
         'SESSION_SECRET',
         'PUBLIC_SITE_NAME',
         'MEDIA_ROOT',
         'new URL(value)',
+        'DATABASE_URL still contains the example placeholder value',
         'postgres:',
         'postgresql:',
         'SESSION_SECRET must be at least 32 characters long',
@@ -99,8 +105,10 @@ def require_hook_and_types() -> int | None:
 
 def require_vite_env_dir() -> int | None:
     vite = read('app/vite.config.ts')
-    if "envDir: '..'" not in vite:
-        return fail("app/vite.config.ts must keep envDir: '..' so app commands read root .env")
+    if "fileURLToPath(new URL('..', import.meta.url))" not in vite:
+        return fail("app/vite.config.ts must resolve repo root envDir from import.meta.url")
+    if 'envDir: repoRoot' not in vite:
+        return fail("app/vite.config.ts must keep envDir pointed at repoRoot")
     if 'plugins: [tailwindcss(), sveltekit()]' not in vite:
         return fail('app/vite.config.ts must preserve Tailwind before SvelteKit plugin order')
     return None
@@ -144,7 +152,7 @@ def require_progress_state() -> int | None:
         'current_phase_title': 'Environment Configuration',
         'phase_status': 'in_progress',
         'next_candidate_phase': 8,
-        'last_patch_id': 'phase-008-environment-config-start',
+        'last_patch_id': 'phase-008-env-loader-repair',
     }
     for key, value in expected.items():
         if progress.get(key) != value:

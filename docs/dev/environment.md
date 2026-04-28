@@ -44,7 +44,12 @@ MEDIA_ROOT=/tmp/multiverse-codex-media
 EOF_ENV
 ```
 
-The app is configured with `envDir: '..'` in `app/vite.config.ts`, so SvelteKit commands run from `app/` read the root `.env` file.
+The app is configured with an absolute repo-root `envDir` in `app/vite.config.ts`, so SvelteKit commands run from `app/` read the root `.env` file.
+
+
+`PUBLIC_SITE_NAME` intentionally uses the public prefix. The server validator reads it from `$env/dynamic/public`, while private values such as `DATABASE_URL`, `SESSION_SECRET`, and `MEDIA_ROOT` are read from `$env/dynamic/private`.
+
+Copying `.env.example` unchanged is expected to fail. Replace `replace-with-url-safe-hex-password` and `replace-with-64-hex-character-session-secret` before treating the valid-env smoke as green.
 
 ## Validation behavior
 

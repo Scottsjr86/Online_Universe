@@ -1,4 +1,5 @@
 import { env as privateEnv } from '$env/dynamic/private';
+import { env as publicEnv } from '$env/dynamic/public';
 
 export type RequiredEnvName = 'DATABASE_URL' | 'SESSION_SECRET' | 'PUBLIC_SITE_NAME' | 'MEDIA_ROOT';
 
@@ -31,19 +32,19 @@ export function clearServerEnvCacheForTests(): void {
   cachedServerEnv = null;
 }
 
-export function getServerEnv(source: EnvSource = privateEnv): ServerEnv {
-  if (source === privateEnv && cachedServerEnv) {
+export function getServerEnv(source?: EnvSource): ServerEnv {
+  if (!source && cachedServerEnv) {
     return cachedServerEnv;
   }
 
-  const parsed = validateServerEnv(source);
-  if (source === privateEnv) {
+  const parsed = validateServerEnv(source ?? readRuntimeEnv());
+  if (!source) {
     cachedServerEnv = parsed;
   }
   return parsed;
 }
 
-export function validateServerEnv(source: EnvSource = privateEnv): ServerEnv {
+export function validateServerEnv(source: EnvSource = readRuntimeEnv()): ServerEnv {
   const values = readRequiredEnv(source);
   validateDatabaseUrl(values.DATABASE_URL);
   validateSessionSecret(values.SESSION_SECRET);
@@ -56,6 +57,15 @@ export function validateServerEnv(source: EnvSource = privateEnv): ServerEnv {
     publicSiteName: values.PUBLIC_SITE_NAME,
     mediaRoot: values.MEDIA_ROOT,
   });
+}
+
+function readRuntimeEnv(): EnvSource {
+  return {
+    DATABASE_URL: privateEnv.DATABASE_URL,
+    SESSION_SECRET: privateEnv.SESSION_SECRET,
+    PUBLIC_SITE_NAME: publicEnv.PUBLIC_SITE_NAME,
+    MEDIA_ROOT: privateEnv.MEDIA_ROOT,
+  };
 }
 
 function readRequiredEnv(source: EnvSource): Record<RequiredEnvName, string> {
@@ -75,6 +85,10 @@ function readRequiredEnv(source: EnvSource): Record<RequiredEnvName, string> {
 }
 
 function validateDatabaseUrl(value: string): void {
+  if (value.includes('replace-with')) {
+    throw new EnvironmentConfigError('DATABASE_URL still contains the example placeholder value.');
+  }
+
   let url: URL;
   try {
     url = new URL(value);

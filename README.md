@@ -272,7 +272,7 @@ Create a local `.env` from the example before running the app:
 
 ```bash
 cp .env.example .env
-# Replace every example value. Use openssl rand -hex 32 for secret material.
+# Replace every example value. Use openssl rand -hex 32 for secret material. Leaving placeholders should fail clearly.
 cd app
 pnpm check
 pnpm build
@@ -285,4 +285,4 @@ Then run the canonical close gate from the repo root:
 PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py professional
 ```
 
-Phase 8 remains open until valid-env and missing-env workstation smokes are recorded.
+Phase 8 remains open until valid-env and missing-env workstation smokes are recorded. The valid-env smoke requires replacing placeholders, not copying `.env.example` unchanged.

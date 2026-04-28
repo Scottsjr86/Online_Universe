@@ -10,7 +10,7 @@ In progress. Not closed.
 - Added server-only environment validation in `app/src/lib/server/env.ts`.
 - Added `app/src/hooks.server.ts` to fail closed at the request boundary when required env is missing or malformed.
 - Added typed `event.locals.env` in `app/src/app.d.ts`.
-- Configured Vite with `envDir: '..'` so app commands read the repository-root `.env`.
+- Configured Vite with an absolute repo-root `envDir` so app commands read the repository-root `.env`.
 - Added `docs/dev/environment.md`.
 - Added `scripts/check_phase_environment.py` and wired it into professional CI.
 
@@ -22,7 +22,7 @@ In progress. Not closed.
 - Required variables defined: complete.
 - Validation added: complete.
 - Professional CI source-shape validation: complete.
-- Owner workstation valid-env app check/build/dev proof: pending.
+- Owner workstation valid-env app check/build/dev proof: pending after replacing example placeholders.
 - Owner workstation missing-env fail-closed proof: pending.
 - Phase 8 closure: not complete.
 
@@ -68,9 +68,11 @@ git apply --check /mnt/data/phase_008_environment_config_start.patch
 
 ## Known limitations
 
-Phase 8 is open until the owner workstation proves valid `.env` app execution, missing-env fail-closed behavior, and professional CI.
+Phase 8 is open until the owner workstation proves valid `.env` app execution with real non-placeholder values, missing-env fail-closed behavior, and professional CI.
 
 ## Architecture laws checked
+
+Pre-existing canonical phase-control docs over 1,000 LOC were reviewed: `docs/multiverse_codex_phase_plan.md` and `docs/multiverse_codex_phase_completion_checklist.md`. They remain intentionally single authoritative control docs for the current workflow; this repair only updates Phase 8-specific text inside that contract.
 
 - Environment parsing is server-only.
 - No database client, migration, schema, route action, auth, media storage, or persistence code was added.
