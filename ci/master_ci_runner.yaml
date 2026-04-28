@@ -83,6 +83,14 @@ lanes:
         run: test -f docs/goldens/phase-005.md
       - name: Check Phase 5 site shell
         run: python3 -S scripts/check_phase_site_shell.py
+      - name: Require Phase 6 spec
+        run: test -f docs/specs/phase-006-spec.md
+      - name: Require Phase 6 closure evidence
+        run: test -f docs/closures/phase-006-closure.md
+      - name: Require Phase 6 golden
+        run: test -f docs/goldens/phase-006.md
+      - name: Check Phase 6 static landing page
+        run: python3 -S scripts/check_phase_landing_page.py
       - name: Reject app .gitkeep sentinel
         run: test ! -e app/.gitkeep
       - name: Reject infra .gitkeep sentinel

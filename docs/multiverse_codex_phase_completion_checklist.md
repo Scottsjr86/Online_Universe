@@ -313,28 +313,34 @@ Each phase locks evidence in `docs/goldens/phase-###.md`.
 
 **Scope lock:** Build homepage sections: `hero; universe teaser; featured worlds placeholder; featured characters placeholder; call-to-action into codex` No database yet.
 
-**Expected artifacts:** `app/src/routes/+page.svelte`
+**Expected artifacts:** `app/src/routes/+page.svelte; scripts/check_phase_landing_page.py; docs/specs/phase-006-spec.md; docs/closures/phase-006-closure.md; docs/goldens/phase-006.md`
 
 **What must be true to call this phase fully complete:**
 
 - [ ] The homepage looks intentional, futuristic, and responsive.
+- [ ] The landing page contains the required hero, universe teaser, featured worlds placeholder, featured characters placeholder, and call-to-action sections.
+- [ ] The call-to-action does not link to unbuilt content routes. Use in-page anchors until real public routes exist.
+- [ ] No database, admin, media, auth, search, or content-route behavior is introduced.
 - [ ] All expected artifacts exist, are committed, and match the phase scope.
 - [ ] Global completion laws are satisfied.
 - [ ] Documentation for this phase is updated.
 - [ ] Prior locked behavior still passes.
+- [ ] The professional CI lane includes and passes the Phase 6 landing-page validator before closure.
 
 **Tests that validate behavior matches intent:**
 
-- [ ] Source smoke check: `pnpm check; pnpm lint`
-- [ ] Run setup/build/check commands from a clean shell and verify the documented happy path works without hidden local state.
-- [ ] Run `git diff --check` and project lint/typecheck/build commands where applicable.
+- [ ] Source smoke check: `pnpm check; pnpm build; pnpm dev` reports ready.
+- [ ] Browser smoke: visit `/` at desktop and mobile widths and confirm all required landing sections render inside the Phase 5 shell.
+- [ ] Targeted validator: `PYTHONDONTWRITEBYTECODE=1 python3 scripts/check_phase_landing_page.py`.
+- [ ] Professional close gate: `PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py professional`.
+- [ ] Run `git diff --check` and project lint/typecheck/build commands where applicable. `pnpm lint` is not required until a lint script exists in `app/package.json`.
 - [ ] Verify failure cases fail cleanly instead of silently succeeding.
 
 **Golden to lock it:**
 
 - [ ] Create/update `docs/goldens/phase-006.md`.
 - [ ] Record commands run, outputs summarized, files changed, and final commit hash.
-- [ ] Include terminal transcript snippets for install, deploy, ops, or environment commands.
+- [ ] Include rendered-output notes or screenshot references for desktop/mobile landing-page smoke.
 - [ ] Golden states any limitations and confirms none violate phase intent.
 
 **Hard no's:**
@@ -344,6 +350,7 @@ Each phase locks evidence in `docs/goldens/phase-###.md`.
 - [ ] No deferred work ever: no TODO/FIXME/stub/placeholder/mocked-success may count as completion.
 - [ ] No unrelated objectives, surprise refactors, or scope braid.
 - [ ] No secrets, private keys, real credentials, production media, or accidental local files committed.
+- [ ] No broken links to unbuilt public routes.
 
 ### Phase 7: Local Native PostgreSQL Foundation
 

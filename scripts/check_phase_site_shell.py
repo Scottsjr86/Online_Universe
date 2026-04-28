@@ -49,16 +49,21 @@ def require_contains(path: str, needles: list[str]) -> int | None:
 
 def require_phase_closed() -> int | None:
     progress = json.loads(read('docs/progress.json'))
-    expected = {
-        'last_completed_phase': 5,
-        'next_candidate_phase': 6,
-        'last_patch_id': 'phase-005-close-site-shell',
-    }
-    for key, value in expected.items():
-        if progress.get(key) != value:
-            return fail(f'docs/progress.json expected {key}={value!r}, got {progress.get(key)!r}')
-    if progress.get('phase_status') not in {'ready', 'complete'}:
-        return fail('docs/progress.json must mark the next phase ready after Phase 5 closes')
+    if progress.get('last_completed_phase', -1) < 5:
+        return fail('docs/progress.json must keep Phase 5 in the completed ladder')
+    if progress.get('current_phase', 0) <= 5:
+        expected = {
+            'last_completed_phase': 5,
+            'next_candidate_phase': 6,
+            'last_patch_id': 'phase-005-close-site-shell',
+        }
+        for key, value in expected.items():
+            if progress.get(key) != value:
+                return fail(f'docs/progress.json expected {key}={value!r}, got {progress.get(key)!r}')
+        if progress.get('phase_status') not in {'ready', 'complete'}:
+            return fail('docs/progress.json must mark the next phase ready after Phase 5 closes')
+    elif progress.get('current_phase', 0) > 5 and progress.get('next_candidate_phase', 0) < 6:
+        return fail('docs/progress.json regressed below the Phase 6 handoff')
 
     closure = read('docs/closures/phase-005-closure.md')
     spec = read('docs/specs/phase-005-spec.md')
@@ -147,9 +152,17 @@ def main() -> int:
     page = read('app/src/routes/+page.svelte')
     if '<main' in page or '</main>' in page:
         return fail('+page.svelte must not own the main landmark after Phase 5 shell')
-    for needle in ['Phase 5 public shell online', 'Real landing content waits for Phase 6']:
-        if needle not in page:
-            return fail(f'+page.svelte missing shell placeholder proof {needle!r}')
+
+    progress = json.loads(read('docs/progress.json'))
+    current_phase = progress.get('current_phase', 0)
+    if current_phase <= 5:
+        for needle in ['Phase 5 public shell online', 'Real landing content waits for Phase 6']:
+            if needle not in page:
+                return fail(f'+page.svelte missing shell placeholder proof {needle!r}')
+    elif '<slot />' in read('app/src/routes/+layout.svelte') and '<SiteShell>' in read('app/src/routes/+layout.svelte'):
+        pass
+    else:
+        return fail('Phase 5 shell wrapper must remain active after later page phases')
 
     closed_result = require_phase_closed()
     if closed_result is not None:

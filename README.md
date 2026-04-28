@@ -7,8 +7,8 @@ The finished project will become a public lore site and creator-owned admin tool
 ## Current phase state
 
 - Last completed phase: Phase 5, Base Layout Shell
-- Current phase after this patch: Phase 6, Static Landing Page ready
-- Next candidate phase: Phase 6, Static Landing Page
+- Current phase after this patch: Phase 6, Static Landing Page in progress
+- Next candidate phase: Phase 6, Static Landing Page closure after workstation proof
 
 Machine-readable state lives in `docs/progress.json`.
 Append-only patch history lives in `docs/progress.jsonl`.
@@ -67,7 +67,7 @@ make ci-enterprise
 make phase-close
 ```
 
-The professional lane is the phase-close gate. New tests, smokes, drift checks, and golden checks must be wired into the manifest before a phase is marked complete. Phase 2 adds the identity/content vocabulary check through `scripts/check_phase_identity.py`. Phase 3 adds the scaffold shape and pnpm lockfile check through `scripts/check_phase_app_scaffold.py`. Phase 4 adds the Tailwind setup and lockfile drift check through `scripts/check_phase_tailwind_setup.py`. Phase 5 adds the site shell shape and closure drift check through `scripts/check_phase_site_shell.py`.
+The professional lane is the phase-close gate. New tests, smokes, drift checks, and golden checks must be wired into the manifest before a phase is marked complete. Phase 2 adds the identity/content vocabulary check through `scripts/check_phase_identity.py`. Phase 3 adds the scaffold shape and pnpm lockfile check through `scripts/check_phase_app_scaffold.py`. Phase 4 adds the Tailwind setup and lockfile drift check through `scripts/check_phase_tailwind_setup.py`. Phase 5 adds the site shell shape and closure drift check through `scripts/check_phase_site_shell.py`. Phase 6 adds the static landing page source-shape check through `scripts/check_phase_landing_page.py`.
 
 ## Project identity docs
 
@@ -181,4 +181,34 @@ Then the canonical close gate passed from the repo root:
 PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py professional
 ```
 
-Phase 6 is the next phase and may replace the placeholder homepage content with the static landing sections defined by the checklist.
+## Phase 6 static landing page
+
+The homepage now contains the required static landing-page sections:
+
+```txt
+app/src/routes/+page.svelte
+scripts/check_phase_landing_page.py
+```
+
+Run the Phase 6 source-shape check from the repo root:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 python3 scripts/check_phase_landing_page.py
+```
+
+Phase 6 is in progress until the workstation app path is proven:
+
+```bash
+cd app
+pnpm check
+pnpm build
+pnpm dev
+```
+
+Then run the canonical close gate from the repo root:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 python3 scripts/run_ci.py professional
+```
+
+The page must stay static. Database content, public content routes, admin tools, media, auth, and search remain later-phase work.

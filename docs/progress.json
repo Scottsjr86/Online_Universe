@@ -1,15 +1,15 @@
 {
   "current_phase": 6,
   "current_phase_title": "Static Landing Page",
-  "phase_status": "ready",
+  "phase_status": "in_progress",
   "last_completed_phase": 5,
   "next_candidate_phase": 6,
-  "last_patch_id": "phase-005-close-site-shell",
-  "updated_at": "2026-04-27T19:33:18Z",
+  "last_patch_id": "phase-006-static-landing-start",
+  "updated_at": "2026-04-27T19:42:06Z",
   "notes": [
     "Phase 0 through Phase 5 are complete.",
-    "Phase 5 closed after the reusable public shell landed and owner workstation proof was reported green for pnpm check, pnpm build, pnpm dev readiness, desktop/mobile route smoke for /, and professional CI.",
-    "The professional CI lane validates the Phase 5 shell shape and Phase 5 closure drift check before the phase remains closed.",
-    "Phase 6 is next and must stay scoped to the static landing page sections only."
+    "Phase 6 static landing page source shape is implemented and professional CI is wired to validate it.",
+    "Phase 6 remains open until owner workstation proof for pnpm check, pnpm build, pnpm dev readiness, desktop/mobile / smoke, and professional CI is recorded.",
+    "Phase 6 must not add database, admin, auth, media, search, or public content-route behavior."
   ]
 }
